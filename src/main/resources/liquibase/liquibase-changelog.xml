@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<include
+		file="software/simple/solutions/framework/core/liquibase/liquibase-changelog.xml" />
+
+	<!-- Create tables -->
+	<include file="tables/create-tables.xml"
+		relativeToChangelogFile="true" />
+
+	<!-- Insert data -->
+	<include file="data/create-data.xml" relativeToChangelogFile="true" />
+
+	<include file="properties/create-data.xml"
+		relativeToChangelogFile="true" />
+
+</databaseChangeLog>

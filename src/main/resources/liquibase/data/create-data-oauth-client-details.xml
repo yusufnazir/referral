@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_oauth_client_details_stellareferral_1" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataOauthClientDetails"><param name="clientId"><![CDATA[stellareferral]]></param><param name="clientSecret"><![CDATA[$2a$10$I1muzpajF5ajVm1QddHPyefM0zK4YEOROtMIM1.9RIbJogi.P7uZ.]]></param><param name="scope"><![CDATA[read,write]]></param><param name="authorizedGrantTypes"><![CDATA[password,refresh_token,client_credentials,authorization_code]]></param><param name="authorities"><![CDATA[ROLE_CLIENT,ROLE_TRUSTED_CLIENT]]></param><param name="accessTokenValidity"><![CDATA[900]]></param><param name="refreshTokenValidity"><![CDATA[2592000]]></param></customChange></changeSet>
+</databaseChangeLog>

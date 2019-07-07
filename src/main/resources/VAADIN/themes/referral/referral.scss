@@ -1,0 +1,28 @@
+@import "variables";
+@import "../cxode/cxode";
+
+@mixin referral {
+	
+	@include cxode;
+	
+	.question-menu{
+		background: $v-selection-color;
+		padding: 5px;
+      	color: valo-font-color($v-selection-color, 0.8);
+      	border-bottom: 1px solid valo-font-color($v-selection-color, 0.8);
+      	
+      	&:hover {
+      		background: darken($v-selection-color,25%);
+  		}
+  		
+  		.v-label{
+  			font-size: 12px;
+  		}
+	}
+	
+	.question-menu-selected{
+		background: lighten($v-selection-color,15%);;
+	}
+	
+	
+}
