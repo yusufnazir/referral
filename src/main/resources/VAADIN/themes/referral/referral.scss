@@ -1,9 +1,11 @@
 @import "variables";
 @import "../cxode/cxode";
+@import "components/sidemenu.scss";
 
 @mixin referral {
 	
 	@include cxode;
+	@include sidemenu;
 	
 	.question-menu{
 		background: $v-selection-color;
@@ -24,5 +26,22 @@
 		background: lighten($v-selection-color,15%);;
 	}
 	
+	.loginview {
+  		background-image: unquote("linear-gradient(145deg, #DD69AC 30%, #DD69AC 100%)");
+  	}
+  	
+  	.backgroundimage {
+		background: url("img/patterns/background_pink.png") !important;
+	}
 	
+	.v-csslayout.flex-row .grow:not(.shrink), .v-csslayout.flex-column .grow:not(.shrink) {
+		font-size:20px;
+	}
+	
+	.appbar-profile-image{
+		width: 60px;
+		height: 60px;
+		border-radius: 100%;
+		padding: 5px;
+	}
 }

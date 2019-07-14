@@ -1,0 +1,13 @@
+@mixin sidemenu {
+	
+	//@include valo-menu($bg: #DD69AC);
+	
+	.valo-menu{
+		color: #e7bbd4 !important;
+	}
+	
+	.valo-menu-item{
+		font-size: 20px !important;
+	}
+	
+}

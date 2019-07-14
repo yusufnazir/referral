@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_view_10000" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataView"><param name="id" value="10000"></param><param name="code" value="HOME"></param><param name="description" value="Home view class"></param><param name="name" value="Home"></param><param name="viewClassName" value="software.simple.solutions.referral.web.views.HomeView"></param></customChange></changeSet>
+	
+</databaseChangeLog>

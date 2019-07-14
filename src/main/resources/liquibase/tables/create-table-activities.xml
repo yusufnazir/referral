@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563060646640">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="activities_" />
+			</not>
+		</preConditions>
+		<createTable tableName="activities_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="PERSON_ID_" type="NUMBER" />
+			<column name="DATE_OF_ACTIVITY_" type="TIMESTAMP(6)" />
+			<column name="ACTIVITY_TYPE_ID_" type="NUMBER" />
+			<column name="REFERRER_PERSON_ID_" type="NUMBER" />
+			<column name="ACTIVITY_AMOUNT_" type="NUMBER" />
+			<column name="REFERRER_ACTIVITY_REWARD_" type="NUMBER" />
+			<column name="REFERRER_REWARD_AMOUNT_" type="NUMBER" />
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563060666893">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="activities_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="activities_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="PERSON_ID_" type="NUMBER" />
+			<column name="DATE_OF_ACTIVITY_" type="TIMESTAMP(6)" />
+			<column name="ACTIVITY_TYPE_ID_" type="NUMBER" />
+			<column name="REFERRER_PERSON_ID_" type="NUMBER" />
+			<column name="ACTIVITY_AMOUNT_" type="NUMBER" />
+			<column name="REFERRER_ACTIVITY_REWARD_" type="NUMBER" />
+			<column name="REFERRER_REWARD_AMOUNT_" type="NUMBER" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

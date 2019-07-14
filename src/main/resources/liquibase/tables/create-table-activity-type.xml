@@ -1,0 +1,46 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563060646640">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="activity_types_" />
+			</not>
+		</preConditions>
+		<createTable tableName="activity_types_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="CODE_" type="VARCHAR(1000)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="DESCRIPTION_" type="VARCHAR(4000)" />
+		</createTable>
+	</changeSet>
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563060666893">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="activity_types_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="activity_types_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="ACTIVE_" type="BIT(1)" />
+
+			<column name="CODE_" type="VARCHAR(1000)" />
+			<column name="NAME_" type="VARCHAR(1000)" />
+			<column name="DESCRIPTION_" type="VARCHAR(4000)" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

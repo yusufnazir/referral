@@ -5,6 +5,10 @@
 @import "../../../VAADIN/addons/calendar/calendar-addon.scss";
 
 
+/* Provided by app-layout-addon-1.0.2.jar */
+@import "../../../VAADIN/addons/app-layout/app-layout.scss";
+
+
 /* Provided by searchdropdown-0.3.0.jar */
 @import "../../../VAADIN/addons/searchdropdown/searchdropdown.scss";
 
@@ -12,6 +16,7 @@
 /* Import and include this mixin into your project theme to include the addon themes */
 @mixin addons {
 	@include calendar-addon;
+	@include app-layout;
 	@include searchdropdown;
 }
 

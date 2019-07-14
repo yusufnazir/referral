@@ -2,4 +2,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
+	<include file="create-table-activity-type.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-activities.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>

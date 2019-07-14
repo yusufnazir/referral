@@ -1,4 +1,4 @@
-package software.simple.solutions.referral.crm.constants;
+package software.simple.solutions.referral.constants;
 
 public class ReferralTheme {
 
