@@ -11,6 +11,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
@@ -21,18 +22,20 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.RegistrationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.referral.entities.Activity;
 import software.simple.solutions.referral.properties.HomeProperty;
 
-public class HomeView extends VerticalLayout implements View {
+public class HomeView extends AbstractBaseView implements View {
 
 	private static final long serialVersionUID = -1503998511461165836L;
 
@@ -44,16 +47,9 @@ public class HomeView extends VerticalLayout implements View {
 	private Label totalRewardsLbl;
 
 	public HomeView() {
-		setSizeUndefined();
-		addStyleName("v-scrollable");
-		headerLayout = createHeaderLayout();
-		addComponent(headerLayout);
-
-		activitiesLayout = createActivitiesLayout();
-		addComponent(activitiesLayout);
-
-		HorizontalLayout friendsLayout = createFriendsLayout();
-		addComponent(friendsLayout);
+//		setSizeUndefined();
+//		setWidth("100%");
+//		addStyleName("v-scrollable");
 	}
 
 	private VerticalLayout createHeaderLayout() {
@@ -82,7 +78,7 @@ public class HomeView extends VerticalLayout implements View {
 	private VerticalLayout createActivitiesLayout() {
 		activitiesLayout = new VerticalLayout();
 		activitiesLayout.setSpacing(true);
-		activitiesLayout.setMargin(true);
+		activitiesLayout.setMargin(false);
 
 		Label activitiesLayoutHeaderFld = new Label(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITIES));
 		activitiesLayoutHeaderFld.addStyleName(ValoTheme.LABEL_H2);
@@ -409,5 +405,27 @@ public class HomeView extends VerticalLayout implements View {
 			this.email = email;
 		}
 
+	}
+
+	@Override
+	public void executeBuild() throws FrameworkException {
+		Panel panel = new Panel();
+		panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+		panel.setSizeFull();
+		addComponent(panel);
+		setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
+		VerticalLayout layout = new VerticalLayout();
+		panel.setContent(layout);
+		layout.setWidth("100%");
+		
+		headerLayout = createHeaderLayout();
+		layout.addComponent(headerLayout);
+		layout.setComponentAlignment(headerLayout, Alignment.MIDDLE_CENTER);
+
+		activitiesLayout = createActivitiesLayout();
+		layout.addComponent(activitiesLayout);
+
+		HorizontalLayout friendsLayout = createFriendsLayout();
+		layout.addComponent(friendsLayout);
 	}
 }

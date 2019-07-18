@@ -1,42 +1,50 @@
-$v-focus-color: rgb(221, 105, 172);
-$v-font-family: "Roboto", sans-serif;
-$v-font-weight: 400;
-$v-font-weight--header: 400;
-$v-background-color: #fff;
-$v-luminance-threshold: 180;
-$v-border: 2px solid v-shade;
-$v-border-radius: 6px;
-$v-bevel: false;
-$v-gradient: false;
-$v-shadow: false;
-$v-textfield-bevel: false;
-$v-textfield-shadow: false;
-$v-link-text-decoration: false;
-$v-selection-overlay-padding-horizontal: 0;
-$v-selection-overlay-padding-vertical: 6px;
-$v-selection-item-height: 30px;
-$v-selection-item-border-radius: 0;
-$valo-menu-background-color: rgb(221, 105, 172);
-$v-focus-style: 0 0 1px 1px rgba($v-focus-color, .5);
-$v-font-size: 11px !default;
-//$v-font-color: #37404E;
-$v-font-size--tiny: 10px;
+$v-font-size: 12px;
+$v-font-weight: 300;
+$v-font-family: "Open Sans", sans-serif;
+$v-font-size--tiny: 12px;
+//$v-unit-size: round(1.8 * $v-font-size) !default;
+
+// Defines the border used by all components.
+$v-border: 1px solid (v-shade 0.7);
+$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+$v-background-color: hsl(210, 0%, 98%);
+//$v-background-color: hsl(47, 42%, 46%);
+
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+$v-gradient: v-linear 8%;
+$v-bevel-depth: 30%;
+$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+$v-focus-color: rgb(221, 105, 172); // Calculates a suitable color automatically
+$v-friendly-color: #2c9720;
+$v-error-indicator-color: #ed473b;
+
+//MARGIN
 $v-layout-margin-top: 10px !default;
 $v-layout-margin-bottom: 10px !default;
 $v-layout-margin-left: 10px !default;
 $v-layout-margin-right: 10px !default;
-$v-layout-spacing-vertical: 4px !default;
-//$v-overlay-shadow: 0 3px 8px v-shade, 0 0 0 1px (v-shade 0.7);
-//$v-panel-background-color: #fff;
-$v-textfield-border-radius: 0;
-$v-unit-size: round(2.2 * $v-font-size) !default;
 
-//$al-bar-height: 80px;
-$al-bar-background-color: rgb(221, 105, 172);
-//$al-bar-font-color: rgb(0, 255, 0);
-$al-drawer-width: 300px;
-$al-drawer-small-width: 80px;
-//$al-drawer-submenu-indention: 10px;
-$al-drawer-submenu-background-color: transparent;
+// Main layout padding
+//$view-padding: round($v-unit-size / 1.5) !default;
+
+// Slight adjustment to menu background-color
+$valo-menu-background-color: #414B56;
+
+$v-disabled-opacity: 0.8 !default;
+
+$v-unit-size: 26px;
+$v-unit-size--small: 20px;
+$v-unit-size--tiny: 18px;
+
+$v-layout-spacing-vertical: 3px;
+//$v-layout-spacing-horizontal: 6px;
 
 @import "../valo/valo";
+

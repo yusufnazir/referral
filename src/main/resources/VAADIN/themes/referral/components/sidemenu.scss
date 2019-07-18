@@ -10,4 +10,13 @@
 		font-size: 20px !important;
 	}
 	
+	.app-layout-behaviour-left-overlay app-toolbar {
+  		background: unquote("-webkit-linear-gradient(to left, #b91d73, #f953c6)"); /* Chrome 10-25, Safari 5.1-6 */
+  		background: unquote("linear-gradient(to left, #b91d73, #f953c6)");
+  	}
+  	
+  	.app-layout-submenu-container{
+  		background: rgba(221, 105, 172, 0.2) !important;
+  	}
+	
 }
