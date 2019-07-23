@@ -8,6 +8,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.entities.PersonInformation;
+import software.simple.solutions.referral.model.FriendModel;
+
 public class FriendCard extends HorizontalLayout {
 
 	private static final long serialVersionUID = 7057954939905170982L;
@@ -16,7 +20,9 @@ public class FriendCard extends HorizontalLayout {
 	private Label nameFld;
 	private Label emailFld;
 
-	public FriendCard() {
+	public FriendCard(FriendModel friendModel) {
+		Person person = friendModel.getPerson();
+		PersonInformation personInformation = friendModel.getPersonInformation();
 		setSizeFull();
 		addStyleName(ValoTheme.LAYOUT_CARD);
 		image = new Image();
@@ -33,11 +39,11 @@ public class FriendCard extends HorizontalLayout {
 		setExpandRatio(verticalLayout, 1);
 		setComponentAlignment(verticalLayout, Alignment.MIDDLE_LEFT);
 		nameFld = new Label();
-		nameFld.setValue("Name");
+		nameFld.setValue(person.getFirstName() + " " + person.getLastName());
 		verticalLayout.addComponent(nameFld);
 
 		emailFld = new Label();
-		emailFld.setValue("Email");
+		emailFld.setValue(personInformation == null ? null : personInformation.getPrimaryEmail());
 		verticalLayout.addComponent(emailFld);
 
 	}

@@ -2,15 +2,20 @@ package software.simple.solutions.referral.web.views;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.vaadin.data.ValueProvider;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -19,21 +24,34 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CButton;
+import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.CTextField;
+import software.simple.solutions.framework.core.components.NotificationWindow;
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.paging.PagingBar;
+import software.simple.solutions.framework.core.paging.PagingSearchEvent;
+import software.simple.solutions.framework.core.pojo.PagingInfo;
+import software.simple.solutions.framework.core.pojo.PagingResult;
 import software.simple.solutions.framework.core.properties.RegistrationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.referral.entities.Activity;
+import software.simple.solutions.referral.model.FriendModel;
 import software.simple.solutions.referral.properties.HomeProperty;
+import software.simple.solutions.referral.service.facade.ActivityServiceFacade;
+import software.simple.solutions.referral.service.facade.PersonFriendServiceFacade;
+import software.simple.solutions.referral.service.facade.PersonRewardServiceFacade;
+import software.simple.solutions.referral.valueobjects.ActivityVO;
 
 public class HomeView extends AbstractBaseView implements View {
 
@@ -44,12 +62,19 @@ public class HomeView extends AbstractBaseView implements View {
 	private VerticalLayout headerLayout;
 	private VerticalLayout activitiesLayout;
 	private Label totalFriendsLbl;
+	private Label totalFriendsFld;
 	private Label totalRewardsLbl;
+	private Label totalRewardsFld;
+	private ListDataProvider<Activity> activityDataProvider;
+	private SessionHolder sessionHolder;
+
+	private PagingBar pagingBar;
+
+	private Grid<Activity> activitiesGrid;
 
 	public HomeView() {
-//		setSizeUndefined();
-//		setWidth("100%");
-//		addStyleName("v-scrollable");
+		sessionHolder = (SessionHolder) UI.getCurrent().getData();
+		activityDataProvider = DataProvider.ofItems();
 	}
 
 	private VerticalLayout createHeaderLayout() {
@@ -58,19 +83,58 @@ public class HomeView extends AbstractBaseView implements View {
 		headerLayout.setMargin(true);
 		headerLayout.addStyleName(ValoTheme.LAYOUT_CARD);
 
+		CGridLayout headerGridLayout = new CGridLayout();
+		headerGridLayout.setSpacing(true);
+		headerLayout.addComponent(headerGridLayout);
+
 		totalFriendsLbl = new Label();
 		totalFriendsLbl.setContentMode(ContentMode.HTML);
 		totalFriendsLbl.setValue(PropertyResolver.getPropertyValueByLocale(HomeProperty.TOTAL_FRIENDS_COUNT));
 		totalFriendsLbl.addStyleName(ValoTheme.LABEL_H1);
 		totalFriendsLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		headerLayout.addComponent(totalFriendsLbl);
+		headerGridLayout.addComponent(totalFriendsLbl, 0, 0);
+
+		totalFriendsFld = new Label();
+		totalFriendsFld.setContentMode(ContentMode.HTML);
+		totalFriendsFld.addStyleName(ValoTheme.LABEL_H1);
+		totalFriendsFld.addStyleName(ValoTheme.LABEL_COLORED);
+		totalFriendsFld.addStyleName(ValoTheme.LABEL_BOLD);
+		totalFriendsFld.setValue(String.valueOf(0L));
+		headerGridLayout.addComponent(totalFriendsFld, 1, 0);
 
 		totalRewardsLbl = new Label();
 		totalRewardsLbl.setContentMode(ContentMode.HTML);
 		totalRewardsLbl.setValue(PropertyResolver.getPropertyValueByLocale(HomeProperty.TOTAL_REWARDS));
 		totalRewardsLbl.addStyleName(ValoTheme.LABEL_H1);
 		totalRewardsLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		headerLayout.addComponent(totalRewardsLbl);
+		headerGridLayout.addComponent(totalRewardsLbl, 0, 1);
+
+		totalRewardsFld = new Label();
+		totalRewardsFld.setContentMode(ContentMode.HTML);
+		totalRewardsFld.addStyleName(ValoTheme.LABEL_H1);
+		totalRewardsFld.addStyleName(ValoTheme.LABEL_COLORED);
+		totalRewardsFld.addStyleName(ValoTheme.LABEL_BOLD);
+		totalRewardsFld.setValue(Constants.DF.format(BigDecimal.ZERO));
+		headerGridLayout.addComponent(totalRewardsFld, 1, 1);
+
+		if (sessionHolder.getApplicationUser().getPerson() != null) {
+			PersonRewardServiceFacade personRewardServiceFacade = PersonRewardServiceFacade.get(UI.getCurrent());
+			Long personId = sessionHolder.getApplicationUser().getPerson().getId();
+			try {
+				BigDecimal cumulativeRewardAmount = personRewardServiceFacade.getPersonCumulativeReward(personId);
+				totalRewardsFld.setValue(Constants.DF.format(cumulativeRewardAmount));
+			} catch (FrameworkException e) {
+				logger.error(e.getMessage(), e);
+			}
+
+			try {
+				PersonFriendServiceFacade personFriendServiceFacade = PersonFriendServiceFacade.get(UI.getCurrent());
+				Long totalFriends = personFriendServiceFacade.getTotalFriends(personId);
+				totalFriendsFld.setValue(String.valueOf(totalFriends));
+			} catch (FrameworkException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 
 		return headerLayout;
 	}
@@ -80,13 +144,57 @@ public class HomeView extends AbstractBaseView implements View {
 		activitiesLayout.setSpacing(true);
 		activitiesLayout.setMargin(false);
 
+		HorizontalLayout horizontalLayout = new HorizontalLayout();
+		horizontalLayout.setWidth("100%");
+		activitiesLayout.addComponent(horizontalLayout);
+
 		Label activitiesLayoutHeaderFld = new Label(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITIES));
 		activitiesLayoutHeaderFld.addStyleName(ValoTheme.LABEL_H2);
 		activitiesLayoutHeaderFld.addStyleName(ValoTheme.LABEL_BOLD);
 		activitiesLayoutHeaderFld.addStyleName(ValoTheme.LABEL_COLORED);
-		activitiesLayout.addComponent(activitiesLayoutHeaderFld);
+		horizontalLayout.addComponent(activitiesLayoutHeaderFld);
+		horizontalLayout.setComponentAlignment(activitiesLayoutHeaderFld, Alignment.BOTTOM_LEFT);
 
-		Grid<Activity> activitiesGrid = new Grid<Activity>();
+		pagingBar = new PagingBar();
+		pagingBar.setItemsPerPage(10);
+		horizontalLayout.addComponent(pagingBar);
+		horizontalLayout.setComponentAlignment(pagingBar, Alignment.BOTTOM_RIGHT);
+		PagingSearchEvent pagingSearchEvent = new PagingSearchEvent() {
+
+			@Override
+			public void handleSearch(int currentPage, int maxResult) {
+
+				try {
+					handleViewSearch();
+				} catch (FrameworkException e) {
+					logger.error(e.getMessage(), e);
+					// updateErrorContent(e);
+					// new MessageWindowHandler(e);
+				}
+			}
+
+			@Override
+			public Long count() throws FrameworkException {
+				return handleCount(false);
+			}
+
+			private Long handleCount(boolean showCount) throws FrameworkException {
+				Long count = 0L;
+				pagingBar.setTotalRows(count);
+
+				if (showCount) {
+					NotificationWindow.notificationNormalWindow(SystemProperty.TOTAL_RECORDS_FOUND,
+							new Object[] { count });
+				}
+
+				return count;
+			}
+		};
+
+		pagingBar.addPagingSearchEvent(pagingSearchEvent);
+
+		activitiesGrid = new Grid<Activity>();
+		activitiesGrid.setHeightMode(HeightMode.UNDEFINED);
 		activitiesGrid.setWidth("100%");
 		Column<Activity, String> personColumn = activitiesGrid.addColumn(new ValueProvider<Activity, String>() {
 
@@ -98,7 +206,7 @@ public class HomeView extends AbstractBaseView implements View {
 						: (source.getPerson().getFirstName() + " " + source.getPerson().getLastName());
 			}
 		});
-		personColumn.setCaption("Person");
+		personColumn.setCaption(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITY_PERSON));
 
 		Column<Activity, String> dateOfActivityColumn = activitiesGrid.addColumn(new ValueProvider<Activity, String>() {
 
@@ -110,7 +218,7 @@ public class HomeView extends AbstractBaseView implements View {
 						: source.getDateOfActivity().format(Constants.DATE_FORMATTER);
 			}
 		});
-		dateOfActivityColumn.setCaption("Activity Date");
+		dateOfActivityColumn.setCaption(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITY_DATE));
 
 		Column<Activity, String> activityTypeColumn = activitiesGrid.addColumn(new ValueProvider<Activity, String>() {
 
@@ -121,50 +229,67 @@ public class HomeView extends AbstractBaseView implements View {
 				return source.getActivityType() == null ? null : source.getActivityType().getName();
 			}
 		});
-		activityTypeColumn.setCaption("Type of Activity");
+		activityTypeColumn.setCaption(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITY_TYPE));
 
-		Column<Activity, BigDecimal> activityAmountColumn = activitiesGrid
-				.addColumn(new ValueProvider<Activity, BigDecimal>() {
+		Column<Activity, String> activityAmountColumn = activitiesGrid.addColumn(new ValueProvider<Activity, String>() {
 
-					private static final long serialVersionUID = -4353655908297580L;
+			private static final long serialVersionUID = -4353655908297580L;
 
-					@Override
-					public BigDecimal apply(Activity source) {
-						return source.getActivityAmount() == null ? null
-								: source.getActivityAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					}
-				});
-		activityAmountColumn.setCaption("Amount Spent");
+			@Override
+			public String apply(Activity source) {
+				return source.getActivityAmount() == null ? Constants.DF.format(BigDecimal.ZERO)
+						: Constants.DF.format(source.getActivityAmount());
+			}
+		});
+		activityAmountColumn.setCaption(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITY_REWARD));
 
-		Column<Activity, BigDecimal> activityRewardAmoundColumn = activitiesGrid
-				.addColumn(new ValueProvider<Activity, BigDecimal>() {
+		Column<Activity, String> activityRewardAmoundColumn = activitiesGrid
+				.addColumn(new ValueProvider<Activity, String>() {
 
 					private static final long serialVersionUID = -4740033061911964158L;
 
 					@Override
-					public BigDecimal apply(Activity source) {
-						return source.getReferrerActivityReward() == null ? null
-								: source.getReferrerActivityReward().setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					public String apply(Activity source) {
+						return source.getCumulativeRewardAmount() == null ? Constants.DF.format(BigDecimal.ZERO)
+								: Constants.DF.format(source.getCumulativeRewardAmount());
 					}
 				});
-		activityRewardAmoundColumn.setCaption("Activity Reward");
-
-		Column<Activity, BigDecimal> referrerRewardAmountColumn = activitiesGrid
-				.addColumn(new ValueProvider<Activity, BigDecimal>() {
-
-					private static final long serialVersionUID = -4372342667475526343L;
-
-					@Override
-					public BigDecimal apply(Activity source) {
-						return source.getReferrerRewardAmount() == null ? null
-								: source.getReferrerRewardAmount().setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					}
-				});
-		referrerRewardAmountColumn.setCaption("Total Reward");
+		activityRewardAmoundColumn
+				.setCaption(PropertyResolver.getPropertyValueByLocale(HomeProperty.ACTIVITY_CUMULATIVE_AMOUNT));
 
 		activitiesLayout.addComponent(activitiesGrid);
+		activitiesGrid.setDataProvider(activityDataProvider);
+		try {
+			handleViewSearch();
+		} catch (FrameworkException e) {
+			logger.error(e.getMessage(), e);
+		}
 
 		return activitiesLayout;
+	}
+
+	private void handleViewSearch() throws FrameworkException {
+		if (sessionHolder.getApplicationUser().getPerson() != null) {
+			activitiesLayout.setVisible(true);
+			ActivityServiceFacade activityServiceFacade = ActivityServiceFacade.get(UI.getCurrent());
+			ActivityVO vo = new ActivityVO();
+			vo.setPersonId(sessionHolder.getApplicationUser().getPerson().getId());
+			PagingInfo pagingInfo = getPagingInfo();
+			vo.setPagingInfo(pagingInfo);
+			PagingResult<Activity> results = activityServiceFacade.findReferrerRelatedActivity(vo);
+			activityDataProvider = DataProvider.ofCollection((Collection<Activity>) results.getResult());
+			activitiesGrid.setDataProvider(activityDataProvider);
+			activityDataProvider.refreshAll();
+		} else {
+			activitiesLayout.setVisible(false);
+		}
+	}
+
+	protected PagingInfo getPagingInfo() {
+		PagingInfo pagingInfo = new PagingInfo();
+		pagingInfo.setMaxResult(pagingBar.getMaxResult());
+		pagingInfo.setStartPosition(pagingBar.getStartPosition());
+		return pagingInfo;
 	}
 
 	private HorizontalLayout createFriendsLayout() {
@@ -187,6 +312,7 @@ public class HomeView extends AbstractBaseView implements View {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setMargin(false);
 		layout.setSpacing(true);
+		layout.setVisible(false);
 
 		Label friendsLayoutHeaderFld = new Label(PropertyResolver.getPropertyValueByLocale(HomeProperty.MY_FRIENDS));
 		friendsLayoutHeaderFld.addStyleName(ValoTheme.LABEL_H2);
@@ -207,10 +333,25 @@ public class HomeView extends AbstractBaseView implements View {
 		verticalLayout.setMargin(false);
 		verticalLayout.setSpacing(true);
 		panel.setContent(verticalLayout);
-		for (int i = 0; i <= 10; i++) {
-			FriendCard friendCard = new FriendCard();
-			friendCard.setWidth("100%");
-			verticalLayout.addComponent(friendCard);
+
+		if (sessionHolder.getApplicationUser().getPerson() != null) {
+			try {
+				PersonFriendServiceFacade personFriendServiceFacade = PersonFriendServiceFacade.get(UI.getCurrent());
+				Long personId = sessionHolder.getApplicationUser().getPerson().getId();
+				List<FriendModel> friends = personFriendServiceFacade.findFriendsByPerson(personId);
+				if (friends == null || friends.isEmpty()) {
+					layout.setVisible(false);
+				} else {
+					layout.setVisible(true);
+					for (FriendModel friend : friends) {
+						FriendCard friendCard = new FriendCard(friend);
+						friendCard.setWidth("100%");
+						verticalLayout.addComponent(friendCard);
+					}
+				}
+			} catch (FrameworkException e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		return layout;
 	}
@@ -417,7 +558,7 @@ public class HomeView extends AbstractBaseView implements View {
 		VerticalLayout layout = new VerticalLayout();
 		panel.setContent(layout);
 		layout.setWidth("100%");
-		
+
 		headerLayout = createHeaderLayout();
 		layout.addComponent(headerLayout);
 		layout.setComponentAlignment(headerLayout, Alignment.MIDDLE_CENTER);

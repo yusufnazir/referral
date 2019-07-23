@@ -15,13 +15,16 @@
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
 
-			<column name="PERSON_ID_" type="NUMBER" />
+			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="DATE_OF_ACTIVITY_" type="TIMESTAMP(6)" />
-			<column name="ACTIVITY_TYPE_ID_" type="NUMBER" />
-			<column name="REFERRER_PERSON_ID_" type="NUMBER" />
+			<column name="ACTIVITY_TYPE_ID_" type="BIGINT" />
+			<column name="REFERRER_PERSON_ID_" type="BIGINT" />
 			<column name="ACTIVITY_AMOUNT_" type="NUMBER" />
-			<column name="REFERRER_ACTIVITY_REWARD_" type="NUMBER" />
-			<column name="REFERRER_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="ACTIVITY_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="CUMULATIVE_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="USE_REWARD_" type="BIT(1)" />
+			<column name="USED_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="MAIN_ACTIVITY_ID_" type="BIGINT" />
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
@@ -41,13 +44,16 @@
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="ACTIVE_" type="BIT(1)" />
 
-			<column name="PERSON_ID_" type="NUMBER" />
+			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="DATE_OF_ACTIVITY_" type="TIMESTAMP(6)" />
-			<column name="ACTIVITY_TYPE_ID_" type="NUMBER" />
-			<column name="REFERRER_PERSON_ID_" type="NUMBER" />
+			<column name="ACTIVITY_TYPE_ID_" type="BIGINT" />
+			<column name="REFERRER_PERSON_ID_" type="BIGINT" />
 			<column name="ACTIVITY_AMOUNT_" type="NUMBER" />
-			<column name="REFERRER_ACTIVITY_REWARD_" type="NUMBER" />
-			<column name="REFERRER_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="ACTIVITY_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="CUMULATIVE_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="USE_REWARD_" type="BIT(1)" />
+			<column name="USED_REWARD_AMOUNT_" type="NUMBER" />
+			<column name="MAIN_ACTIVITY_ID_" type="BIGINT" />
 		</createTable>
 	</changeSet>
 

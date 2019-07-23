@@ -8,4 +8,10 @@
 	<include file="create-table-activities.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-person-reward.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-person-friend.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>

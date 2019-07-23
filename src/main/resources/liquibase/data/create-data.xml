@@ -14,4 +14,10 @@
 
 	<include file="create-data-oauth-client-details.xml"
 		relativeToChangelogFile="true" />
+
+	<include file="create-data-activity-type.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-data-relation-types.xml"
+		relativeToChangelogFile="true" />
 </databaseChangeLog>

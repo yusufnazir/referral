@@ -13,8 +13,10 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.referral.constants.ReferralTables;
+import software.simple.solutions.referral.properties.ActivityTypeProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -30,17 +32,21 @@ public class ActivityType extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = ActivityTypeProperty.ID)
 	private Long id;
 
 	@Column(name = ReferralTables.ACTIVITY_TYPES_.COLUMNS.ACTIVE_)
 	private Boolean active;
 
+	@FilterFieldProperty(fieldProperty = ActivityTypeProperty.CODE)
 	@Column(name = ReferralTables.ACTIVITY_TYPES_.COLUMNS.CODE_)
 	private String code;
 
+	@FilterFieldProperty(fieldProperty = ActivityTypeProperty.NAME)
 	@Column(name = ReferralTables.ACTIVITY_TYPES_.COLUMNS.NAME_)
 	private String name;
 
+	@FilterFieldProperty(fieldProperty = ActivityTypeProperty.DESCRIPTION)
 	@Column(name = ReferralTables.ACTIVITY_TYPES_.COLUMNS.DESCRIPTION_)
 	private String description;
 

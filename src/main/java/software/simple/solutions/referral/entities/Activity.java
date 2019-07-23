@@ -20,9 +20,14 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import software.simple.solutions.framework.core.annotations.FilterFieldProperties;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.referral.constants.ReferralTables;
+import software.simple.solutions.referral.properties.ActivityProperty;
+import software.simple.solutions.referral.properties.ActivityTypeProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -32,10 +37,13 @@ import software.simple.solutions.referral.constants.ReferralTables;
 @SelectBeforeUpdate(value = true)
 public class Activity extends MappedSuperClass {
 
+	private static final long serialVersionUID = 100873796019490516L;
+
 	@Id
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = ActivityProperty.ID)
 	private Long id;
 
 	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.ACTIVE_)
@@ -44,29 +52,48 @@ public class Activity extends MappedSuperClass {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = ReferralTables.ACTIVITIES_.COLUMNS.PERSON_ID_)
+	@FilterFieldProperties(fieldProperties = {
+			@FilterFieldProperty(fieldProperty = ActivityProperty.FRIEND_FIRST_NAME, referencedFieldProperty = PersonProperty.FIRST_NAME),
+			@FilterFieldProperty(fieldProperty = ActivityProperty.FRIEND_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
 	private Person person;
 
 	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.DATE_OF_ACTIVITY_)
+	@FilterFieldProperty(fieldProperty = ActivityProperty.DATE_OF_ACTIVITY)
 	private LocalDateTime dateOfActivity;
 
 	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = ReferralTables.ACTIVITIES_.COLUMNS.ACTIVITY_TYPE_ID_)
+	@FilterFieldProperty(fieldProperty = ActivityTypeProperty.ID)
 	private ActivityType activityType;
 
 	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = ReferralTables.ACTIVITIES_.COLUMNS.REFERRER_PERSON_ID_)
-	private Person referrerPersonId;
+	@FilterFieldProperties(fieldProperties = {
+			@FilterFieldProperty(fieldProperty = ActivityProperty.REFERRER_FIRST_NAME, referencedFieldProperty = PersonProperty.FIRST_NAME),
+			@FilterFieldProperty(fieldProperty = ActivityProperty.REFERRER_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
+	private Person referrerPerson;
 
+	@FilterFieldProperty(fieldProperty = ActivityProperty.ACTIVITY_AMOUNT)
 	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.ACTIVITY_AMOUNT_)
 	private BigDecimal activityAmount;
 
-	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.REFERRER_ACTIVITY_REWARD_)
-	private BigDecimal referrerActivityReward;
+	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.ACTIVITY_REWARD_AMOUNT_)
+	private BigDecimal activityRewardAmount;
 
-	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.REFERRER_REWARD_AMOUNT_)
-	private BigDecimal referrerRewardAmount;
+	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.CUMULATIVE_REWARD_AMOUNT_)
+	private BigDecimal cumulativeRewardAmount;
+
+	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.USE_REWARD_)
+	private Boolean useReward;
+
+	@Column(name = ReferralTables.ACTIVITIES_.COLUMNS.USED_REWARD_AMOUNT_)
+	private BigDecimal usedRewardAmount;
+
+	@ManyToOne
+	@JoinColumn(name = ReferralTables.ACTIVITIES_.COLUMNS.MAIN_ACTIVITY_ID_)
+	private Activity mainActivity;
 
 	public Long getId() {
 		return id;
@@ -108,12 +135,12 @@ public class Activity extends MappedSuperClass {
 		this.activityType = activityType;
 	}
 
-	public Person getReferrerPersonId() {
-		return referrerPersonId;
+	public Person getReferrerPerson() {
+		return referrerPerson;
 	}
 
-	public void setReferrerPersonId(Person referrerPersonId) {
-		this.referrerPersonId = referrerPersonId;
+	public void setReferrerPerson(Person referrerPerson) {
+		this.referrerPerson = referrerPerson;
 	}
 
 	public BigDecimal getActivityAmount() {
@@ -124,20 +151,44 @@ public class Activity extends MappedSuperClass {
 		this.activityAmount = activityAmount;
 	}
 
-	public BigDecimal getReferrerActivityReward() {
-		return referrerActivityReward;
+	public BigDecimal getActivityRewardAmount() {
+		return activityRewardAmount;
 	}
 
-	public void setReferrerActivityReward(BigDecimal referrerActivityReward) {
-		this.referrerActivityReward = referrerActivityReward;
+	public void setActivityRewardAmount(BigDecimal activityRewardAmount) {
+		this.activityRewardAmount = activityRewardAmount;
 	}
 
-	public BigDecimal getReferrerRewardAmount() {
-		return referrerRewardAmount;
+	public BigDecimal getCumulativeRewardAmount() {
+		return cumulativeRewardAmount;
 	}
 
-	public void setReferrerRewardAmount(BigDecimal referrerRewardAmount) {
-		this.referrerRewardAmount = referrerRewardAmount;
+	public void setCumulativeRewardAmount(BigDecimal cumulativeRewardAmount) {
+		this.cumulativeRewardAmount = cumulativeRewardAmount;
+	}
+
+	public Boolean getUseReward() {
+		return useReward;
+	}
+
+	public void setUseReward(Boolean useReward) {
+		this.useReward = useReward;
+	}
+
+	public BigDecimal getUsedRewardAmount() {
+		return usedRewardAmount;
+	}
+
+	public void setUsedRewardAmount(BigDecimal usedRewardAmount) {
+		this.usedRewardAmount = usedRewardAmount;
+	}
+
+	public Activity getMainActivity() {
+		return mainActivity;
+	}
+
+	public void setMainActivity(Activity mainActivity) {
+		this.mainActivity = mainActivity;
 	}
 
 }

@@ -1,0 +1,45 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563751139055">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="person_friends_" />
+			</not>
+		</preConditions>
+		<createTable tableName="person_friends_">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" />
+			</column>
+			<column name="PERSON_ID_" type="BIGINT" />
+			<column name="FRIEND_ID_" type="BIGINT" />
+			<column name="START_DATE_" type="TIMESTAMP(6)" />
+			<column name="END_DATE_" type="TIMESTAMP(6)" />
+		</createTable>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1563751168028">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="person_friends_aud" />
+			</not>
+		</preConditions>
+		<createTable tableName="person_friends_aud">
+			<column name="ID_" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REV" type="BIGINT">
+				<constraints nullable="false" />
+			</column>
+			<column name="REVISION_TYPE" type="TINYINT" />
+			<column name="PERSON_ID_" type="BIGINT" />
+			<column name="FRIEND_ID_" type="BIGINT" />
+			<column name="START_DATE_" type="TIMESTAMP(6)" />
+			<column name="END_DATE_" type="TIMESTAMP(6)" />
+		</createTable>
+	</changeSet>
+
+</databaseChangeLog>

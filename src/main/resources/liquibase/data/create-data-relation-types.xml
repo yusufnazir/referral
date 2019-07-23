@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_relation_type_10000" author="core"> <customChange class="software.simple.solutions.framework.core.liquibase.DataRelationType"><param name="id"><![CDATA[10000]]></param><param name="code"><![CDATA[REFERRER]]></param><param name="name"><![CDATA[Referrer]]></param><param name="requiresRelatedTo"><![CDATA[FALSE]]></param></customChange></changeSet>
+	<changeSet onValidationFail="MARK_RAN" id="data_relation_type_10001" author="core"> <customChange class="software.simple.solutions.framework.core.liquibase.DataRelationType"><param name="id"><![CDATA[10001]]></param><param name="code"><![CDATA[FRIEND_OF]]></param><param name="name"><![CDATA[Friend of]]></param><param name="requiresRelatedTo"><![CDATA[TRUE]]></param></customChange></changeSet>
+</databaseChangeLog>
