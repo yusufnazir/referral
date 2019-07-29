@@ -5,9 +5,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.stereotype.Repository;
 
-import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.repository.impl.GenericRepository;
+import software.simple.solutions.referral.entities.PersonFriend;
 import software.simple.solutions.referral.model.FriendModel;
 import software.simple.solutions.referral.repository.IPersonFriendRepository;
 
@@ -25,7 +25,7 @@ public class PersonFriendRepository extends GenericRepository implements IPerson
 	}
 
 	@Override
-	public List<FriendModel> findFriendsByPerson(Long personId) throws FrameworkException {
+	public List<FriendModel> findFriendsByReferrer(Long personId) throws FrameworkException {
 		String query = "select new software.simple.solutions.referral.model.FriendModel(pf.friend,pi) from PersonFriend pf "
 				+ "left join PersonInformation pi on pi.person.id=pf.friend.id " + "where pf.person.id=:id";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
@@ -34,10 +34,18 @@ public class PersonFriendRepository extends GenericRepository implements IPerson
 	}
 
 	@Override
-	public Person getActiveByPerson(Long personId) throws FrameworkException {
-		String query = "select pf.person from PersonFriend pf where pf.friend.id=:id and pf.endDate is null";
+	public PersonFriend getActiveAsFriend(Long friendId) throws FrameworkException {
+		String query = "from PersonFriend pf where pf.friend.id=:id and pf.endDate is null";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
-		paramMap.put("id", personId);
+		paramMap.put("id", friendId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public PersonFriend findReferrerOfFriend(Long friendId) throws FrameworkException {
+		String query = "from PersonFriend pf where pf.friend.id=:id and pf.endDate is null";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("id", friendId);
 		return getByQuery(query, paramMap);
 	}
 

@@ -1,5 +1,6 @@
 package software.simple.solutions.referral.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -67,13 +68,28 @@ public class PersonFriendService extends SuperService implements IPersonFriendSe
 	}
 
 	@Override
-	public List<FriendModel> findFriendsByPerson(Long personId) throws FrameworkException {
-		return personFriendRepository.findFriendsByPerson(personId);
+	public List<FriendModel> findFriendsByReferrer(Long personId) throws FrameworkException {
+		return personFriendRepository.findFriendsByReferrer(personId);
 	}
 
 	@Override
-	public Person getActiveByPerson(Long personId) throws FrameworkException {
-		return personFriendRepository.getActiveByPerson(personId);
+	public PersonFriend getActiveAsFriend(Long personId) throws FrameworkException {
+		return personFriendRepository.getActiveAsFriend(personId);
+	}
+
+	@Override
+	public PersonFriend findReferrerOfFriend(Long friendId) throws FrameworkException {
+		return personFriendRepository.findReferrerOfFriend(friendId);
+	}
+
+	@Override
+	public PersonFriend deactivateAsFriend(Long id) throws FrameworkException {
+		PersonFriend personFriend = getActiveAsFriend(id);
+		if (personFriend != null) {
+			personFriend.setEndDate(LocalDateTime.now());
+			saveOrUpdate(personFriend, false);
+		}
+		return personFriend;
 	}
 
 }

@@ -6,7 +6,9 @@ import com.vaadin.ui.UI;
 
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.PagingResult;
+import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
+import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.referral.entities.Activity;
 import software.simple.solutions.referral.service.IActivityService;
 import software.simple.solutions.referral.valueobjects.ActivityVO;
@@ -26,6 +28,11 @@ public class ActivityServiceFacade extends SuperServiceFacade<IActivityService> 
 	@Autowired
 	public PagingResult<Activity> findReferrerRelatedActivity(ActivityVO vo) throws FrameworkException {
 		return service.findReferrerRelatedActivity(vo);
+	}
+
+	@Override
+	public SecurityValidation registerFriend(PersonVO vo) throws FrameworkException {
+		return service.registerFriend(vo);
 	}
 
 }

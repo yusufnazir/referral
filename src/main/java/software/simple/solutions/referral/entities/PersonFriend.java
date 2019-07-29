@@ -17,9 +17,13 @@ import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
+import software.simple.solutions.framework.core.annotations.FilterFieldProperties;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.entities.Person;
+import software.simple.solutions.framework.core.properties.PersonProperty;
 import software.simple.solutions.referral.constants.ReferralTables;
+import software.simple.solutions.referral.properties.PersonFriendProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -39,15 +43,25 @@ public class PersonFriend extends MappedSuperClass {
 
 	@ManyToOne
 	@JoinColumn(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.PERSON_ID_)
+	@FilterFieldProperties(fieldProperties = {
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON, referencedFieldProperty = PersonProperty.ID),
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON_FIRST_NAME, referencedFieldProperty = PersonProperty.FIRST_NAME),
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
 	private Person person;
 
 	@ManyToOne
 	@JoinColumn(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.FRIEND_ID_)
+	@FilterFieldProperties(fieldProperties = {
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND, referencedFieldProperty = PersonProperty.ID),
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_FIRST_NAME, referencedFieldProperty = PersonProperty.FIRST_NAME),
+			@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
 	private Person friend;
 
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.START_DATE)
 	@Column(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.START_DATE_)
 	private LocalDateTime startDate;
 
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.END_DATE)
 	@Column(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.END_DATE_)
 	private LocalDateTime endDate;
 

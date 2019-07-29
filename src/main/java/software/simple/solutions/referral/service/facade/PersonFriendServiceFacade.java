@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.ui.UI;
 
-import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
+import software.simple.solutions.referral.entities.PersonFriend;
 import software.simple.solutions.referral.model.FriendModel;
 import software.simple.solutions.referral.service.IPersonFriendService;
 
@@ -30,13 +30,22 @@ public class PersonFriendServiceFacade extends SuperServiceFacade<IPersonFriendS
 		return service.getTotalFriends(personId);
 	}
 
-	public List<FriendModel> findFriendsByPerson(Long personId) throws FrameworkException {
-		return service.findFriendsByPerson(personId);
+	public List<FriendModel> findFriendsByReferrer(Long personId) throws FrameworkException {
+		return service.findFriendsByReferrer(personId);
 	}
 
 	@Override
-	public Person getActiveByPerson(Long personId) throws FrameworkException {
-		return service.getActiveByPerson(personId);
+	public PersonFriend getActiveAsFriend(Long personId) throws FrameworkException {
+		return service.getActiveAsFriend(personId);
+	}
+
+	public PersonFriend findReferrerOfFriend(Long friendId) throws FrameworkException {
+		return service.findReferrerOfFriend(friendId);
+	}
+
+	@Override
+	public PersonFriend deactivateAsFriend(Long id) throws FrameworkException {
+		return service.deactivateAsFriend(id);
 	}
 
 }

@@ -13,19 +13,21 @@ public class PersonFriendVO extends SuperVO {
 	private static final long serialVersionUID = -2008276944089219114L;
 
 	private Long id;
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON)
 	private Long personId;
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND)
 	private Long friendId;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
 
-	@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_FIRST_NAME)
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON_FIRST_NAME)
 	private StringInterval personFirstName;
-	@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_LAST_NAME)
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON_LAST_NAME)
 	private StringInterval personLastName;
-	@FilterFieldProperty(fieldProperty = PersonFriendProperty.REFERRER_FIRST_NAME)
-	private StringInterval referrerFirstName;
-	@FilterFieldProperty(fieldProperty = PersonFriendProperty.REFERRER_LAST_NAME)
-	private StringInterval referrerLastName;
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_FIRST_NAME)
+	private StringInterval friendFirstName;
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_LAST_NAME)
+	private StringInterval friendLastName;
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.START_DATE)
 	private DateInterval startDateInterval;
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.END_DATE)
@@ -88,19 +90,19 @@ public class PersonFriendVO extends SuperVO {
 	}
 
 	public StringInterval getReferrerFirstName() {
-		return referrerFirstName;
+		return friendFirstName;
 	}
 
 	public void setReferrerFirstName(StringInterval referrerFirstName) {
-		this.referrerFirstName = referrerFirstName;
+		this.friendFirstName = referrerFirstName;
 	}
 
 	public StringInterval getReferrerLastName() {
-		return referrerLastName;
+		return friendLastName;
 	}
 
 	public void setReferrerLastName(StringInterval referrerLastName) {
-		this.referrerLastName = referrerLastName;
+		this.friendLastName = referrerLastName;
 	}
 
 	public DateInterval getStartDateInterval() {

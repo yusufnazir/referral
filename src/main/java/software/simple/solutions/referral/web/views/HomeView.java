@@ -1,7 +1,6 @@
 package software.simple.solutions.referral.web.views;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,14 +10,10 @@ import org.apache.logging.log4j.Logger;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.HorizontalLayout;
@@ -29,20 +24,15 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.components.AbstractBaseView;
-import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CGridLayout;
-import software.simple.solutions.framework.core.components.CPopupDateField;
-import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.NotificationWindow;
 import software.simple.solutions.framework.core.components.SessionHolder;
-import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.paging.PagingBar;
 import software.simple.solutions.framework.core.paging.PagingSearchEvent;
 import software.simple.solutions.framework.core.pojo.PagingInfo;
 import software.simple.solutions.framework.core.pojo.PagingResult;
-import software.simple.solutions.framework.core.properties.RegistrationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.referral.entities.Activity;
@@ -52,6 +42,7 @@ import software.simple.solutions.referral.service.facade.ActivityServiceFacade;
 import software.simple.solutions.referral.service.facade.PersonFriendServiceFacade;
 import software.simple.solutions.referral.service.facade.PersonRewardServiceFacade;
 import software.simple.solutions.referral.valueobjects.ActivityVO;
+import software.simple.solutions.referral.web.views.home.InviteFriendLayout;
 
 public class HomeView extends AbstractBaseView implements View {
 
@@ -302,8 +293,9 @@ public class HomeView extends AbstractBaseView implements View {
 		myFriendsLayout.setHeight("100%");
 		friendsLayout.addComponent(myFriendsLayout);
 
-		VerticalLayout inviteFriendLayout = createInviteFriendLayout();
-		friendsLayout.addComponent(inviteFriendLayout);
+		InviteFriendLayout inviteFriendLayout = new InviteFriendLayout();
+		VerticalLayout createdInviteFriendLayout = inviteFriendLayout.createInviteFriendLayout();
+		friendsLayout.addComponent(createdInviteFriendLayout);
 
 		return friendsLayout;
 	}
@@ -338,7 +330,7 @@ public class HomeView extends AbstractBaseView implements View {
 			try {
 				PersonFriendServiceFacade personFriendServiceFacade = PersonFriendServiceFacade.get(UI.getCurrent());
 				Long personId = sessionHolder.getApplicationUser().getPerson().getId();
-				List<FriendModel> friends = personFriendServiceFacade.findFriendsByPerson(personId);
+				List<FriendModel> friends = personFriendServiceFacade.findFriendsByReferrer(personId);
 				if (friends == null || friends.isEmpty()) {
 					layout.setVisible(false);
 				} else {
@@ -354,176 +346,6 @@ public class HomeView extends AbstractBaseView implements View {
 			}
 		}
 		return layout;
-	}
-
-	public VerticalLayout createInviteFriendLayout() {
-
-		VerticalLayout fields = new VerticalLayout();
-		fields.setMargin(false);
-		fields.setSpacing(true);
-
-		Label registrationHeaderFld = new Label(
-				PropertyResolver.getPropertyValueByLocale(HomeProperty.INVITE_A_FRIEND));
-		registrationHeaderFld.addStyleName(ValoTheme.LABEL_H2);
-		registrationHeaderFld.addStyleName(ValoTheme.LABEL_BOLD);
-		registrationHeaderFld.addStyleName(ValoTheme.LABEL_COLORED);
-		fields.addComponent(registrationHeaderFld);
-
-		VerticalLayout layout = new VerticalLayout();
-		layout.addStyleName(ValoTheme.LAYOUT_CARD);
-		layout.setMargin(true);
-		layout.setSpacing(true);
-		layout.setWidth("600px");
-		fields.addComponent(layout);
-
-		Label errorLbl = new Label();
-		errorLbl.setContentMode(ContentMode.HTML);
-		errorLbl.addStyleName(ValoTheme.LABEL_FAILURE);
-		errorLbl.addStyleName(ValoTheme.LABEL_H3);
-		errorLbl.setVisible(false);
-		errorLbl.setSizeFull();
-
-		final CTextField firstNameFld = new CTextField();
-		firstNameFld.setSizeFull();
-		firstNameFld.addStyleName(ValoTheme.TEXTFIELD_LARGE);
-		firstNameFld.setCaptionByKey(RegistrationProperty.REGISTER_FIRST_NAME);
-		firstNameFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_FIRST_NAME));
-		firstNameFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		firstNameFld.setRequiredIndicatorVisible(true);
-
-		final CTextField lastNameFld = new CTextField();
-		lastNameFld.setSizeFull();
-		lastNameFld.addStyleName(ValoTheme.TEXTFIELD_LARGE);
-		lastNameFld.setCaptionByKey(RegistrationProperty.REGISTER_LAST_NAME);
-		lastNameFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_LAST_NAME));
-		lastNameFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		lastNameFld.setRequiredIndicatorVisible(true);
-
-		final CPopupDateField dobFld = new CPopupDateField();
-		dobFld.setSizeFull();
-		dobFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
-		dobFld.setCaptionByKey(RegistrationProperty.REGISTER_DATE_OF_BIRTH);
-		dobFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_DATE_OF_BIRTH));
-		dobFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		dobFld.setDateFormat(Constants.SIMPLE_DATE_FORMAT.toPattern());
-		dobFld.setRangeEnd(LocalDate.now());
-		dobFld.setRequiredIndicatorVisible(true);
-
-		final GenderSelect genderFld = new GenderSelect();
-		genderFld.setSizeFull();
-		genderFld.addStyleName(ValoTheme.COMBOBOX_LARGE);
-		genderFld.setCaptionByKey(RegistrationProperty.REGISTER_GENDER);
-		genderFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_GENDER));
-
-		final CTextField contactNumberFld = new CTextField();
-		contactNumberFld.setSizeFull();
-		contactNumberFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
-		contactNumberFld.setCaptionByKey(RegistrationProperty.REGISTER_MOBILE_NUMBER);
-		contactNumberFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_MOBILE_NUMBER));
-		contactNumberFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		contactNumberFld.setRequiredIndicatorVisible(true);
-
-		final CTextField emailFld = new CTextField();
-		emailFld.setSizeFull();
-		emailFld.addStyleName(ValoTheme.DATEFIELD_LARGE);
-		emailFld.setCaptionByKey(RegistrationProperty.REGISTER_EMAIL);
-		emailFld.setPlaceholder(PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_EMAIL));
-		emailFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		emailFld.setRequiredIndicatorVisible(true);
-
-		HorizontalLayout actionLayout = new HorizontalLayout();
-		actionLayout.setMargin(false);
-		actionLayout.setSpacing(true);
-		actionLayout.setWidth("100%");
-
-		final CButton inviteFriendsFld = new CButton();
-		inviteFriendsFld.setSizeFull();
-		inviteFriendsFld.addStyleName(ValoTheme.BUTTON_LARGE);
-		inviteFriendsFld.addStyleName(ValoTheme.BUTTON_PRIMARY);
-		inviteFriendsFld.setCaptionByKey(HomeProperty.INVITE_BUTTON);
-		inviteFriendsFld.setIcon(FontAwesome.USER);
-		inviteFriendsFld.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-		actionLayout.addComponent(inviteFriendsFld);
-
-		final CButton clearFieldsFld = new CButton();
-		clearFieldsFld.setSizeFull();
-		clearFieldsFld.addStyleName(ValoTheme.BUTTON_LARGE);
-		clearFieldsFld.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_CLEAR);
-		clearFieldsFld.addStyleName(ValoTheme.BUTTON_DANGER);
-		clearFieldsFld.setIcon(VaadinIcons.ERASER);
-		actionLayout.addComponent(clearFieldsFld);
-
-		layout.addComponents(firstNameFld, lastNameFld, dobFld, contactNumberFld, emailFld, actionLayout);
-
-		inviteFriendsFld.addClickListener(new ClickListener() {
-
-			private static final long serialVersionUID = -7736352842423878879L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				// registerUser();
-			}
-
-			private void clearFields() {
-				firstNameFld.clear();
-				lastNameFld.clear();
-				dobFld.clear();
-				contactNumberFld.clear();
-				genderFld.clear();
-				emailFld.clear();
-			}
-
-			// private void registerUser() {
-			// errorLbl.setVisible(false);
-			//
-			// IApplicationUserService applicationUserService =
-			// ContextProvider.getBean(IApplicationUserService.class);
-			// ApplicationUserVO vo = new ApplicationUserVO();
-			// vo.setFirstName(firstNameFld.getValue());
-			// vo.setLastName(lastNameFld.getValue());
-			// vo.setDateOfBirth(dobFld.getValue());
-			// vo.setMobileNumber(contactNumberFld.getValue());
-			// vo.setGenderId(genderFld.getLongValue());
-			// vo.setUsername(emailFld.getValue());
-			// vo.setEmail(emailFld.getValue());
-			// vo.setPassword(passwordFld.getValue());
-			// vo.setPasswordConfirm(confirmPasswordFld.getValue());
-			// vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
-			// try {
-			// SecurityValidation securityValidation =
-			// applicationUserService.registerUser(vo);
-			// if (!securityValidation.isSuccess()) {
-			// errorLbl.setVisible(true);
-			// errorLbl.setValue(PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
-			// securityValidation.getArgs(t -> {
-			// if (t.isKey()) {
-			// return PropertyResolver.getPropertyValueByLocale(t.getValue());
-			// } else {
-			// return t.getValue();
-			// }
-			// })));
-			// } else {
-			// clearFields();
-			// }
-			// } catch (FrameworkException e) {
-			// logger.error(e.getMessage(), e);
-			// }
-			// }
-		});
-
-		clearFieldsFld.addClickListener(new ClickListener() {
-
-			private static final long serialVersionUID = -7736352842423878879L;
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-			}
-		});
-
-		return fields;
-
 	}
 
 	public static class Friend {

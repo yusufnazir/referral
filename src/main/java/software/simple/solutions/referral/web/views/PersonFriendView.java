@@ -9,13 +9,15 @@ import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.constants.ReferenceKey;
+import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.util.ColumnSort;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 import software.simple.solutions.framework.core.web.lookup.PersonLookUpField;
-import software.simple.solutions.referral.constants.ReferralTables;
+import software.simple.solutions.referral.constants.ReferralReferenceKey;
 import software.simple.solutions.referral.entities.PersonFriend;
 import software.simple.solutions.referral.properties.ActivityTypeProperty;
 import software.simple.solutions.referral.properties.PersonFriendProperty;
@@ -31,7 +33,7 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 		setServiceClass(PersonFriendServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
-		setEntityReferenceKey(ReferralTables.PERSON_FRIENDS_.NAME);
+		setEntityReferenceKey(ReferralReferenceKey.PERSON_FRIEND);
 	}
 
 	@Override
@@ -96,22 +98,28 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 
 		private static final long serialVersionUID = 117780868467918033L;
 
+		private CStringIntervalLayout personFirstNameFld;
+		private CStringIntervalLayout personLastNameFld;
 		private CStringIntervalLayout friendFirstNameFld;
 		private CStringIntervalLayout friendLastNameFld;
-		private CStringIntervalLayout referrerFirstNameFld;
-		private CStringIntervalLayout referrerLastNameFld;
 
 		private CDateIntervalLayout startDateFld;
 		private CDateIntervalLayout endDateFld;
 
 		@Override
 		public void executeBuild() {
+			Person person = getReferenceKey(ReferenceKey.PERSON);
+			personFirstNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.PERSON_FIRST_NAME, 0, 0);
+			personLastNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.PERSON_LAST_NAME, 0, 1);
+			if (person != null) {
+				personFirstNameFld.setValue(person.getFirstName());
+				personFirstNameFld.setReadOnly(true);
+				personLastNameFld.setValue(person.getLastName());
+				personLastNameFld.setReadOnly(true);
+			}
 
-			friendFirstNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.FRIEND_FIRST_NAME, 0, 0);
-			friendLastNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.FRIEND_LAST_NAME, 0, 1);
-			referrerFirstNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.REFERRER_FIRST_NAME, 0,
-					2);
-			referrerLastNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.REFERRER_LAST_NAME, 0, 3);
+			friendFirstNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.FRIEND_FIRST_NAME, 0, 2);
+			friendLastNameFld = addField(CStringIntervalLayout.class, PersonFriendProperty.FRIEND_LAST_NAME, 0, 3);
 
 			startDateFld = addField(CDateIntervalLayout.class, PersonFriendProperty.START_DATE, 1, 0);
 			endDateFld = addField(CDateIntervalLayout.class, PersonFriendProperty.END_DATE, 1, 1);
@@ -120,10 +128,12 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 		@Override
 		public Object getCriteria() {
 			PersonFriendVO vo = new PersonFriendVO();
-			vo.setPersonFirstName(friendFirstNameFld.getValue());
-			vo.setPersonLastName(friendLastNameFld.getValue());
-			vo.setReferrerFirstName(referrerFirstNameFld.getValue());
-			vo.setReferrerLastName(referrerLastNameFld.getValue());
+			Person person = getReferenceKey(ReferenceKey.PERSON);
+			vo.setPersonId(person == null ? null : person.getId());
+			vo.setPersonFirstName(personFirstNameFld.getValue());
+			vo.setPersonLastName(personLastNameFld.getValue());
+			vo.setReferrerFirstName(friendFirstNameFld.getValue());
+			vo.setReferrerLastName(friendLastNameFld.getValue());
 			vo.setStartDateInterval(startDateFld.getValue());
 			vo.setEndDateInterval(endDateFld.getValue());
 			SortingHelper sortingHelper = new SortingHelper();
