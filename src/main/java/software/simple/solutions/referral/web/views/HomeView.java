@@ -23,6 +23,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import io.reactivex.functions.Consumer;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.NotificationWindow;
@@ -62,6 +63,8 @@ public class HomeView extends AbstractBaseView implements View {
 	private PagingBar pagingBar;
 
 	private Grid<Activity> activitiesGrid;
+
+	private VerticalLayout myFriendsLayout;
 
 	public HomeView() {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
@@ -268,9 +271,13 @@ public class HomeView extends AbstractBaseView implements View {
 			PagingInfo pagingInfo = getPagingInfo();
 			vo.setPagingInfo(pagingInfo);
 			PagingResult<Activity> results = activityServiceFacade.findReferrerRelatedActivity(vo);
-			activityDataProvider = DataProvider.ofCollection((Collection<Activity>) results.getResult());
-			activitiesGrid.setDataProvider(activityDataProvider);
-			activityDataProvider.refreshAll();
+			if (results.getResult() == null || results.getResult().isEmpty()) {
+				activitiesLayout.setVisible(false);
+			} else {
+				activityDataProvider = DataProvider.ofCollection((Collection<Activity>) results.getResult());
+				activitiesGrid.setDataProvider(activityDataProvider);
+				activityDataProvider.refreshAll();
+			}
 		} else {
 			activitiesLayout.setVisible(false);
 		}
@@ -289,13 +296,24 @@ public class HomeView extends AbstractBaseView implements View {
 		friendsLayout.setMargin(false);
 		friendsLayout.setHeightUndefined();
 
-		VerticalLayout myFriendsLayout = createFriendsPanel();
+		myFriendsLayout = createFriendsPanel();
 		myFriendsLayout.setHeight("100%");
 		friendsLayout.addComponent(myFriendsLayout);
 
 		InviteFriendLayout inviteFriendLayout = new InviteFriendLayout();
 		VerticalLayout createdInviteFriendLayout = inviteFriendLayout.createInviteFriendLayout();
 		friendsLayout.addComponent(createdInviteFriendLayout);
+
+		inviteFriendLayout.getFriendInvitedObserver().subscribe(new Consumer<Boolean>() {
+
+			@Override
+			public void accept(Boolean arg0) throws Exception {
+				int componentIndex = friendsLayout.getComponentIndex(myFriendsLayout);
+				friendsLayout.removeComponent(myFriendsLayout);
+				myFriendsLayout = createFriendsPanel();
+				friendsLayout.addComponent(myFriendsLayout, componentIndex);
+			}
+		});
 
 		return friendsLayout;
 	}
@@ -391,4 +409,5 @@ public class HomeView extends AbstractBaseView implements View {
 		HorizontalLayout friendsLayout = createFriendsLayout();
 		layout.addComponent(friendsLayout);
 	}
+
 }

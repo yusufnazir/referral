@@ -1,0 +1,119 @@
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  @-o-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  
+@mixin landingpage {
+  .fade-in {
+    animation: fadeIn ease 5s;
+    -webkit-animation: fadeIn ease 5s;
+    -moz-animation: fadeIn ease 5s;
+    -o-animation: fadeIn ease 5s;
+    -ms-animation: fadeIn ease 5s;
+  }
+
+  .landing-page-header {
+    background-color: #DD6AAD;
+  }
+
+  .landing-page {
+    overflow: auto;
+    background: url("img/patterns/background_pink.png") !important;
+    padding-top: 0 !important;
+
+    > .v-loading-indicator {
+      display: none !important;
+    }
+  }
+
+  .landing-page-panel {
+    width: 100%;
+    min-width: $v-font-size * 13;
+    max-width: 80%;
+    background-color: rgba(255, 255, 255, 0.25);
+
+    > .v-spacing {
+      height: round($v-unit-size / 2);
+    }
+
+    .labels {
+      display: block;
+
+      .h4 {
+        margin: 0;
+        vertical-align: baseline;
+      }
+
+      .h3 {
+        margin: 0;
+        float: right;
+      }
+    }
+
+    .fields .v-icon {
+      opacity: 0.3;
+    }
+    @include width-range($min: 0, $max: $v-unit-size * 14) {
+      .labels .h3 {
+        float: none;
+        display: block;
+        margin-top: 0.2em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .fields {
+        display: block;
+
+        .v-slot {
+          display: block;
+
+          .v-widget {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}

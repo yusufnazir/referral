@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.pojo.DateInterval;
 import software.simple.solutions.framework.core.pojo.StringInterval;
+import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 import software.simple.solutions.referral.properties.PersonFriendProperty;
 
@@ -32,6 +33,32 @@ public class PersonFriendVO extends SuperVO {
 	private DateInterval startDateInterval;
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.END_DATE)
 	private DateInterval endDateInterval;
+
+	private PersonVO personVO;
+
+	public StringInterval getFriendFirstName() {
+		return friendFirstName;
+	}
+
+	public void setFriendFirstName(StringInterval friendFirstName) {
+		this.friendFirstName = friendFirstName;
+	}
+
+	public StringInterval getFriendLastName() {
+		return friendLastName;
+	}
+
+	public void setFriendLastName(StringInterval friendLastName) {
+		this.friendLastName = friendLastName;
+	}
+
+	public PersonVO getPersonVO() {
+		return personVO;
+	}
+
+	public void setPersonVO(PersonVO personVO) {
+		this.personVO = personVO;
+	}
 
 	public Long getId() {
 		return id;

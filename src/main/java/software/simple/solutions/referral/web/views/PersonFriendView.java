@@ -37,6 +37,12 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 	}
 
 	@Override
+	public boolean isSubMenuValid() {
+		Object referenceKey = getReferenceKey(ReferralReferenceKey.PERSON);
+		return referenceKey != null;
+	}
+
+	@Override
 	public void setUpCustomColumns() {
 		addContainerProperty(new ValueProvider<PersonFriend, String>() {
 

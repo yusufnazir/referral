@@ -3,11 +3,11 @@ package software.simple.solutions.referral.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Gender;
@@ -38,7 +38,7 @@ import software.simple.solutions.referral.service.IPersonRewardService;
 import software.simple.solutions.referral.valueobjects.ActivityVO;
 import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IActivityRepository.class)
 public class ActivityService extends SuperService implements IActivityService {
@@ -137,7 +137,7 @@ public class ActivityService extends SuperService implements IActivityService {
 				activity.setPerson(get(Person.class, vo.getPersonId()));
 
 				activity = saveOrUpdate(activity, vo.isNew());
-				personRewardService.updatePersonReward(vo.getReferrerId(), vo.getActivityRewardAmount(),
+				personRewardService.updatePersonReward(vo.getPersonId(), vo.getActivityRewardAmount(),
 						vo.getUsedReward());
 				// createRewardActivity(vo, activity);
 			}
@@ -190,50 +190,54 @@ public class ActivityService extends SuperService implements IActivityService {
 	}
 
 	@Override
-	public SecurityValidation registerFriend(PersonVO vo) throws FrameworkException {
-		if (StringUtils.isBlank(vo.getFirstName())) {
+	public SecurityValidation registerFriend(PersonFriendVO vo) throws FrameworkException {
+		PersonVO personVO = vo.getPersonVO();
+		if (StringUtils.isBlank(personVO.getFirstName())) {
 			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(RegistrationProperty.REGISTER_FIRST_NAME));
 		}
-		if (StringUtils.isBlank(vo.getLastName())) {
+		if (StringUtils.isBlank(personVO.getLastName())) {
 			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(RegistrationProperty.REGISTER_LAST_NAME));
 		}
-		if (vo.getDateOfBirth() == null) {
+		if (personVO.getDateOfBirth() == null) {
 			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(RegistrationProperty.REGISTER_DATE_OF_BIRTH));
 		}
-		if (vo.getMobileNumber() == null) {
+		if (personVO.getMobileNumber() == null) {
 			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(RegistrationProperty.REGISTER_MOBILE_NUMBER));
 		}
-		if (StringUtils.isBlank(vo.getEmail())) {
+		if (StringUtils.isBlank(personVO.getEmail())) {
 			return SecurityValidation.build(SystemMessageProperty.FIELD_IS_REQUIRED,
 					new Arg().key(RegistrationProperty.REGISTER_EMAIL));
 		}
 
-		Boolean codeUnique = personService.isCodeUnique(Person.class, vo.getEmail());
+		Boolean codeUnique = personService.isCodeUnique(Person.class, personVO.getEmail());
 		if (!codeUnique) {
 			return SecurityValidation.build(RegistrationProperty.REGISTER_USER_ALREADY_EXISTS,
-					new Arg().norm(vo.getEmail()));
+					new Arg().norm(personVO.getEmail()));
 		}
 
 		Person person = new Person();
 		person.setActive(true);
-		person.setCode(vo.getEmail());
-		person.setDateOfBirth(vo.getDateOfBirth());
-		person.setFirstName(vo.getFirstName());
-		person.setLastName(vo.getLastName());
-		person.setGender(get(Gender.class, vo.getGenderId()));
+		person.setCode(personVO.getEmail());
+		person.setDateOfBirth(personVO.getDateOfBirth());
+		person.setFirstName(personVO.getFirstName());
+		person.setLastName(personVO.getLastName());
+		person.setGender(get(Gender.class, personVO.getGenderId()));
 		person = saveOrUpdate(person, true);
 
-		personService.updatePersonEmail(person.getId(), vo.getEmail());
-		personService.updatePersonMobileNumber(person.getId(), vo.getMobileNumber());
+		personService.createPersonImage(person);
+
+		personService.updatePersonEmail(person.getId(), personVO.getEmail());
+		personService.updatePersonMobileNumber(person.getId(), personVO.getMobileNumber());
 
 		PersonFriendVO personFriendVO = new PersonFriendVO();
-		personFriendVO.setPersonId(vo.getId());
+		personFriendVO.setPersonId(vo.getPersonId());
 		personFriendVO.setFriendId(person.getId());
 		personFriendVO.setStartDate(LocalDateTime.now());
+		personFriendVO.setNew(true);
 		personFriendService.updateSingle(personFriendVO);
 
 		// applicationUserService.sendRegistrationMailToNewUser(applicationUser,

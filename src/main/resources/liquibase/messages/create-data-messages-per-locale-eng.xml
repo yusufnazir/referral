@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_message_eng_10000" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataMessageLocale"><param name="id" value="10000"></param><param name="localeId" value="1"></param><param name="messageId" value="10000"></param><param name="subject" value="Insufficient funds"></param><param name="reason"><![CDATA[You do have sufficient funds to complete this transaction.]]></param></customChange></changeSet>
+
+</databaseChangeLog>

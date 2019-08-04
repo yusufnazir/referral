@@ -375,6 +375,7 @@ public class ActivityView extends BasicTemplate<Activity> {
 				@Override
 				public void valueChange(ValueChangeEvent<Boolean> event) {
 					usedRewardAmountFld.setVisible(false);
+					usedRewardAmountFld.setBigDecimalValue(BigDecimal.ZERO);
 					Boolean useReward = useRewardFld.getValue();
 					if (useReward) {
 						usedRewardAmountFld.setVisible(true);

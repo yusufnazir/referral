@@ -2,7 +2,10 @@
 @import "addons.scss";
 @import "referral.scss";
 
+@include font-face('Parisienne',
+              '../../../../mytheme/fonts/Parisienne-Regular.ttf', 400, normal);
 .referral {
+	font-family: Parisienne;
 	// Output the actual theme selectors
   	@include addons;
   	@include referral;

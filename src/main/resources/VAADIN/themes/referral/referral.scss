@@ -1,11 +1,13 @@
 @import "variables";
 @import "../cxode/cxode";
 @import "components/sidemenu.scss";
+@import "views/landingpage.scss";
 
 @mixin referral {
 	
 	@include cxode;
 	@include sidemenu;
+	@include landingpage;
 	
 	.question-menu{
 		background: $v-selection-color;
@@ -23,7 +25,7 @@
 	}
 	
 	.question-menu-selected{
-		background: lighten($v-selection-color,15%);;
+		background: lighten($v-selection-color,15%);
 	}
 	
 	.loginview {

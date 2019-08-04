@@ -12,12 +12,15 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.CTextField;
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -29,6 +32,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.referral.properties.HomeProperty;
 import software.simple.solutions.referral.service.IActivityService;
+import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
 public class InviteFriendLayout {
 
@@ -47,8 +51,18 @@ public class InviteFriendLayout {
 	private HorizontalLayout actionLayout;
 	private CButton inviteFriendsFld;
 	private CButton clearFieldsFld;
+	private SessionHolder sessionHolder;
+
+	private final BehaviorSubject<Boolean> friendInvitedObserver;
+
+	public InviteFriendLayout() {
+		super();
+		friendInvitedObserver = BehaviorSubject.create();
+	}
 
 	public VerticalLayout createInviteFriendLayout() {
+
+		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 
 		fields = new VerticalLayout();
 		fields.setMargin(false);
@@ -60,19 +74,20 @@ public class InviteFriendLayout {
 		registrationHeaderFld.addStyleName(ValoTheme.LABEL_COLORED);
 		fields.addComponent(registrationHeaderFld);
 
-		layout = new VerticalLayout();
-		layout.addStyleName(ValoTheme.LAYOUT_CARD);
-		layout.setMargin(true);
-		layout.setSpacing(true);
-		layout.setWidth("600px");
-		fields.addComponent(layout);
-
 		errorLbl = new Label();
 		errorLbl.setContentMode(ContentMode.HTML);
 		errorLbl.addStyleName(ValoTheme.LABEL_FAILURE);
 		errorLbl.addStyleName(ValoTheme.LABEL_H3);
 		errorLbl.setVisible(false);
 		errorLbl.setSizeFull();
+		fields.addComponent(errorLbl);
+
+		layout = new VerticalLayout();
+		layout.addStyleName(ValoTheme.LAYOUT_CARD);
+		layout.setMargin(true);
+		layout.setSpacing(true);
+		layout.setWidth("600px");
+		fields.addComponent(layout);
 
 		firstNameFld = new CTextField();
 		firstNameFld.setSizeFull();
@@ -154,14 +169,17 @@ public class InviteFriendLayout {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				// registerUser();
+				registerUser();
 			}
 
 			private void registerUser() {
 				errorLbl.setVisible(false);
 
 				IActivityService activityService = ContextProvider.getBean(IActivityService.class);
+				PersonFriendVO personFriendVO = new PersonFriendVO();
+				personFriendVO.setPersonId(sessionHolder.getApplicationUser().getPerson().getId());
 				PersonVO vo = new PersonVO();
+				personFriendVO.setPersonVO(vo);
 				vo.setFirstName(firstNameFld.getValue());
 				vo.setLastName(lastNameFld.getValue());
 				vo.setDateOfBirth(dobFld.getValue());
@@ -170,7 +188,7 @@ public class InviteFriendLayout {
 				vo.setEmail(emailFld.getValue());
 				// vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
 				try {
-					SecurityValidation securityValidation = activityService.registerFriend(vo);
+					SecurityValidation securityValidation = activityService.registerFriend(personFriendVO);
 					if (!securityValidation.isSuccess()) {
 						errorLbl.setVisible(true);
 						errorLbl.setValue(PropertyResolver.getPropertyValueByLocale(securityValidation.getMessageKey(),
@@ -182,6 +200,7 @@ public class InviteFriendLayout {
 									}
 								})));
 					} else {
+						friendInvitedObserver.onNext(true);
 						clearFields();
 					}
 				} catch (FrameworkException e) {
@@ -210,6 +229,10 @@ public class InviteFriendLayout {
 		contactNumberFld.clear();
 		genderFld.clear();
 		emailFld.clear();
+	}
+
+	public BehaviorSubject<Boolean> getFriendInvitedObserver() {
+		return friendInvitedObserver;
 	}
 
 }

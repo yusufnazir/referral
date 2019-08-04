@@ -19,6 +19,7 @@ import com.vaadin.spring.annotation.SpringViewDisplay;
 
 import software.simple.solutions.framework.core.ui.FrameworkUI;
 import software.simple.solutions.referral.constants.ReferralTheme;
+import software.simple.solutions.referral.web.views.LoginView;
 
 @SpringUI(path = "/app/*")
 @PushStateNavigation // proper url paths
@@ -30,6 +31,11 @@ import software.simple.solutions.referral.constants.ReferralTheme;
 public class ReferralUI extends FrameworkUI implements ViewDisplay {
 
 	private static final long serialVersionUID = 4740048384227503876L;
+
+	public ReferralUI() {
+		super();
+		setLoginView(LoginView.class);
+	}
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {

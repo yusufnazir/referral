@@ -3,10 +3,10 @@ package software.simple.solutions.referral.service.impl;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Person;
@@ -22,7 +22,7 @@ import software.simple.solutions.referral.repository.IPersonFriendRepository;
 import software.simple.solutions.referral.service.IPersonFriendService;
 import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IPersonFriendRepository.class)
 public class PersonFriendService extends SuperService implements IPersonFriendService {

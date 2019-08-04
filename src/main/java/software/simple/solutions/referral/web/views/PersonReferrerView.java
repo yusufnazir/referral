@@ -53,6 +53,12 @@ public class PersonReferrerView extends AbstractBaseView {
 		buildMainLayout();
 	}
 
+	@Override
+	public boolean isSubMenuValid() {
+		Object referenceKey = getReferenceKey(ReferralReferenceKey.PERSON);
+		return referenceKey != null;
+	}
+
 	private void buildMainLayout() {
 		CGridLayout gridLayout = new CGridLayout();
 		gridLayout.setSpacing(true);
@@ -220,7 +226,6 @@ public class PersonReferrerView extends AbstractBaseView {
 				}
 			}
 		});
-
 	}
 
 }

@@ -6,4 +6,5 @@ public class ReferralStyle {
 	public static final String QUESTION_MENU_SELECTED = "question-menu-selected";
 	public static final String CAPTION_MATRIX_AXIS = "matrix-axis";
 	public static final String SECTION_LABEL = "v-section-label";
+	public static final String LANDING_PAGE_HEADER = "landing-page-header";
 }

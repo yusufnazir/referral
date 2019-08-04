@@ -15,4 +15,7 @@
 	<include file="properties/create-data.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="messages/create-data.xml"
+		relativeToChangelogFile="true" />
+
 </databaseChangeLog>

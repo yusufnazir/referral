@@ -2,10 +2,10 @@ package software.simple.solutions.referral.service.impl;
 
 import java.math.BigDecimal;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.entities.Person;
@@ -16,11 +16,12 @@ import software.simple.solutions.framework.core.service.impl.SuperService;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 import software.simple.solutions.referral.entities.PersonReward;
 import software.simple.solutions.referral.properties.PersonRewardProperty;
+import software.simple.solutions.referral.properties.ReferralMessageProperty;
 import software.simple.solutions.referral.repository.IPersonRewardRepository;
 import software.simple.solutions.referral.service.IPersonRewardService;
 import software.simple.solutions.referral.valueobjects.PersonRewardVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IPersonRewardRepository.class)
 public class PersonRewardService extends SuperService implements IPersonRewardService {
@@ -54,7 +55,13 @@ public class PersonRewardService extends SuperService implements IPersonRewardSe
 			BigDecimal usedRewardAmount) throws FrameworkException {
 		PersonReward personReward = personRewardRepository.getByPerson(referrerId);
 		boolean isNew = false;
-		if (personReward == null) {
+		BigDecimal cumulativeAmount = (personReward != null && personReward.getCumulativeReward() != null)
+				? personReward.getCumulativeReward() : BigDecimal.ZERO;
+
+		if (usedRewardAmount != null && usedRewardAmount.compareTo(BigDecimal.ZERO) > 0
+				&& cumulativeAmount.compareTo(BigDecimal.ZERO) <= 0) {
+			throw new FrameworkException(ReferralMessageProperty.INSUFFICIENT_FUNDS);
+		} else if (personReward == null) {
 			isNew = true;
 			personReward = new PersonReward();
 			personReward.setPerson(get(Person.class, referrerId));

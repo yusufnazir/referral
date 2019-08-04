@@ -3756,7 +3756,61 @@ div.v-layout.v-horizontal.v-widget {
  * @group valo-menu
  */
 
+@keyframes fadeIn {
+		0% {
+		opacity: 0;
+	}
+		100% {
+		opacity: 1;
+	}
+	}
+
+@-moz-keyframes fadeIn {
+		0% {
+		opacity: 0;
+	}
+		100% {
+		opacity: 1;
+	}
+	}
+
+@-webkit-keyframes fadeIn {
+		0% {
+		opacity: 0;
+	}
+		100% {
+		opacity: 1;
+	}
+	}
+
+@-o-keyframes fadeIn {
+		0% {
+		opacity: 0;
+	}
+		100% {
+		opacity: 1;
+	}
+	}
+
+@-ms-keyframes fadeIn {
+		0% {
+		opacity: 0;
+	}
+		100% {
+		opacity: 1;
+	}
+	}
+
+@font-face {
+	font-family: "Parisienne";
+	font-weight: 400;
+	font-style: normal;
+	src: url(../valo/util/bourbon/css3/../../../../mytheme/fonts/Parisienne-Regular.ttf.eot);
+	src: url(../valo/util/bourbon/css3/../../../../mytheme/fonts/Parisienne-Regular.ttf.eot?#iefix) format("embedded-opentype"), url(../valo/util/bourbon/css3/../../../../mytheme/fonts/Parisienne-Regular.ttf.woff) format("woff"), url(../valo/util/bourbon/css3/../../../../mytheme/fonts/Parisienne-Regular.ttf.ttf) format("truetype"), url(../valo/util/bourbon/css3/../../../../mytheme/fonts/Parisienne-Regular.ttf.svg#Parisienne) format("svg");
+}
+
 .referral {
+	font-family: Parisienne;
 	@media (max-width: 1441px) {
 	.user-menu__profile-img {
 		width: 3rem;
@@ -23033,6 +23087,77 @@ div.v-layout.v-horizontal.v-widget {
 
 .referral .app-layout-submenu-container {
 	background: rgba(221, 105, 172, 0.2) !important;
+}
+
+.referral .fade-in {
+	animation: fadeIn ease 5s;
+	-webkit-animation: fadeIn ease 5s;
+	-moz-animation: fadeIn ease 5s;
+	-o-animation: fadeIn ease 5s;
+	-ms-animation: fadeIn ease 5s;
+}
+
+.referral .landing-page-header {
+	background-color: #DD6AAD;
+}
+
+.referral .landing-page {
+	overflow: auto;
+	background: url(views/img/patterns/background_pink.png) !important;
+	padding-top: 0 !important;
+}
+
+.referral .landing-page  > .v-loading-indicator {
+	display: none !important;
+}
+
+.referral .landing-page-panel {
+	width: 100%;
+	min-width: 156px;
+	max-width: 80%;
+	background-color: rgba(255, 255, 255, 0.25);
+}
+
+.referral .landing-page-panel  > .v-spacing {
+	height: 13px;
+}
+
+.referral .landing-page-panel .labels {
+	display: block;
+}
+
+.referral .landing-page-panel .labels .h4 {
+	margin: 0;
+	vertical-align: baseline;
+}
+
+.referral .landing-page-panel .labels .h3 {
+	margin: 0;
+	float: right;
+}
+
+.referral .landing-page-panel .fields .v-icon {
+	opacity: 0.3;
+}
+
+.referral .landing-page-panel[width-range~="0-364px"] .labels .h3 {
+	float: none;
+	display: block;
+	margin-top: 0.2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.referral .landing-page-panel[width-range~="0-364px"] .fields {
+	display: block;
+}
+
+.referral .landing-page-panel[width-range~="0-364px"] .fields .v-slot {
+	display: block;
+}
+
+.referral .landing-page-panel[width-range~="0-364px"] .fields .v-slot .v-widget {
+	width: 100%;
 }
 
 .referral .question-menu {

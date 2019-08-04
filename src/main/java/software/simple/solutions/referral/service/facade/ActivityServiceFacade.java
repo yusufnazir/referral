@@ -12,6 +12,7 @@ import software.simple.solutions.framework.core.valueobjects.PersonVO;
 import software.simple.solutions.referral.entities.Activity;
 import software.simple.solutions.referral.service.IActivityService;
 import software.simple.solutions.referral.valueobjects.ActivityVO;
+import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
 public class ActivityServiceFacade extends SuperServiceFacade<IActivityService> implements IActivityService {
 
@@ -31,7 +32,7 @@ public class ActivityServiceFacade extends SuperServiceFacade<IActivityService> 
 	}
 
 	@Override
-	public SecurityValidation registerFriend(PersonVO vo) throws FrameworkException {
+	public SecurityValidation registerFriend(PersonFriendVO vo) throws FrameworkException {
 		return service.registerFriend(vo);
 	}
 

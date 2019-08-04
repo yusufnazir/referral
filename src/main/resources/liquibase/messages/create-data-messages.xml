@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_message_10000" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataMessage"><param name="id" value="10000"></param><param name="code"><![CDATA[system.exception.insufficient.funds]]></param><param name="description"><![CDATA[Insufficient funds.]]></param></customChange></changeSet>
+</databaseChangeLog>
+

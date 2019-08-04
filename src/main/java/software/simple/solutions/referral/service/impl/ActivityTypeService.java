@@ -2,11 +2,11 @@ package software.simple.solutions.referral.service.impl;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.exceptions.Arg;
@@ -20,7 +20,7 @@ import software.simple.solutions.referral.repository.IActivityTypeRepository;
 import software.simple.solutions.referral.service.IActivityTypeService;
 import software.simple.solutions.referral.valueobjects.ActivityTypeVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IActivityTypeRepository.class)
 public class ActivityTypeService extends SuperService implements IActivityTypeService {
