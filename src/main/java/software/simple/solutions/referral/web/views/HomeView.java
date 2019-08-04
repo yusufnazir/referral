@@ -300,20 +300,22 @@ public class HomeView extends AbstractBaseView implements View {
 		myFriendsLayout.setHeight("100%");
 		friendsLayout.addComponent(myFriendsLayout);
 
-		InviteFriendLayout inviteFriendLayout = new InviteFriendLayout();
-		VerticalLayout createdInviteFriendLayout = inviteFriendLayout.createInviteFriendLayout();
-		friendsLayout.addComponent(createdInviteFriendLayout);
+		if (sessionHolder.getApplicationUser().getPerson() != null) {
+			InviteFriendLayout inviteFriendLayout = new InviteFriendLayout();
+			VerticalLayout createdInviteFriendLayout = inviteFriendLayout.createInviteFriendLayout();
+			friendsLayout.addComponent(createdInviteFriendLayout);
 
-		inviteFriendLayout.getFriendInvitedObserver().subscribe(new Consumer<Boolean>() {
+			inviteFriendLayout.getFriendInvitedObserver().subscribe(new Consumer<Boolean>() {
 
-			@Override
-			public void accept(Boolean arg0) throws Exception {
-				int componentIndex = friendsLayout.getComponentIndex(myFriendsLayout);
-				friendsLayout.removeComponent(myFriendsLayout);
-				myFriendsLayout = createFriendsPanel();
-				friendsLayout.addComponent(myFriendsLayout, componentIndex);
-			}
-		});
+				@Override
+				public void accept(Boolean arg0) throws Exception {
+					int componentIndex = friendsLayout.getComponentIndex(myFriendsLayout);
+					friendsLayout.removeComponent(myFriendsLayout);
+					myFriendsLayout = createFriendsPanel();
+					friendsLayout.addComponent(myFriendsLayout, componentIndex);
+				}
+			});
+		}
 
 		return friendsLayout;
 	}

@@ -67,7 +67,7 @@ public class PersonRewardService extends SuperService implements IPersonRewardSe
 			personReward.setPerson(get(Person.class, referrerId));
 			personReward.setCumulativeReward(activityRewardAmount);
 		} else {
-			personReward.setCumulativeReward(personReward.getCumulativeReward()
+			personReward.setCumulativeReward(cumulativeAmount
 					.subtract(usedRewardAmount == null ? BigDecimal.ZERO : usedRewardAmount)
 					.add(activityRewardAmount == null ? BigDecimal.ZERO : activityRewardAmount));
 		}
