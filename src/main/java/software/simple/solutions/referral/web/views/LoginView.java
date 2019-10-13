@@ -52,6 +52,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.ApplicationUserVO;
 import software.simple.solutions.framework.core.web.view.password.RequestPasswordResetLayout;
 import software.simple.solutions.referral.constants.ReferralStyle;
+import software.simple.solutions.referral.properties.LoginProperty;
 
 public class LoginView extends VerticalLayout implements View {
 
@@ -130,17 +131,20 @@ public class LoginView extends VerticalLayout implements View {
 		messageLbl.setWidth("80%");
 		messageLbl.setContentMode(ContentMode.HTML);
 		messageLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		messageLbl.setValue("&nbsp;<h1 style=\"color:#a04d7d;\"><b>Get rewarded and make your friends love you!</b></h1>"
-				+ "<h2 style=\"color:#a04d7d;\"><p>Let your friends use your refferal discount code "
-				+ "@ each purchase order and they wil receive the same discount as you. "
-				+ "For every purchase they make with a value of $100 or more, you get a $5 reward.</p><br></h2>"
-				+ "<h2 style=\"color:#a04d7d;\"><b>Conditions:</b><br>&nbsp;" 
-				+ "<ul>"
-				+ "<li style=\"padding-bottom:0.5em\">You must be a registered referal member. Cost to register TBD (1st 10-15 kandidates free admission).</li>"
-				+ "<li style=\"padding-bottom:0.5em\">Your friend must match your full name and discount code @ each purchase order.</li>"
-				+ "<li style=\"padding-bottom:0.5em\">If unspend your accumulated reward will max out @ US$ 100.</li>"
-				+ "<li style=\"padding-bottom:0.5em\">Use your reward to discount the Costs for your next order (Price USA or EU = Price SU) on items with a shipping weight equal or less than 2 lbs and up to a purchase order of max. US$ 100.</li>"
-				+ "</ul></h2>");
+		String propertyValueByLocale = PropertyResolver.getPropertyValueByLocale(LoginProperty.REFERRAL_INDEX_PAGE_MAIN_MESSAGE,
+				UI.getCurrent().getLocale());
+		messageLbl.setValue(propertyValueByLocale);
+//		messageLbl
+//				.setValue("&nbsp;<h1 style=\"color:#a04d7d;\"><b>Get rewarded and make your friends love you!</b></h1>"
+//						+ "<h2 style=\"color:#a04d7d;\"><p>Let your friends use your refferal discount code "
+//						+ "@ each purchase order and they wil receive the same discount as you. "
+//						+ "For every purchase they make with a value of $100 or more, you get a $5 reward.</p><br></h2>"
+//						+ "<h2 style=\"color:#a04d7d;\"><b>Conditions:</b><br>&nbsp;" + "<ul>"
+//						+ "<li style=\"padding-bottom:0.5em\">You must be a registered referal member. Cost to register TBD (1st 10-15 kandidates free admission).</li>"
+//						+ "<li style=\"padding-bottom:0.5em\">Your friend must match your full name and discount code @ each purchase order.</li>"
+//						+ "<li style=\"padding-bottom:0.5em\">If unspend your accumulated reward will max out @ US$ 100.</li>"
+//						+ "<li style=\"padding-bottom:0.5em\">Use your reward to discount the Costs for your next order (Price USA or EU = Price SU) on items with a shipping weight equal or less than 2 lbs and up to a purchase order of max. US$ 100.</li>"
+//						+ "</ul></h2>");
 		bannerLayout.addComponent(messageLbl);
 		bannerLayout.setComponentAlignment(messageLbl, Alignment.TOP_CENTER);
 
@@ -350,13 +354,13 @@ public class LoginView extends VerticalLayout implements View {
 		confirmPasswordFld.setRequiredIndicatorVisible(true);
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-		CCheckBox termsAndConditionCheckFld = new CCheckBox();
-		horizontalLayout.addComponent(termsAndConditionCheckFld);
-		Link link = new Link();
-		link.setCaption(
-				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
-		link.addStyleName(Style.REGISTER_LINK);
-		horizontalLayout.addComponent(link);
+//		CCheckBox termsAndConditionCheckFld = new CCheckBox();
+//		horizontalLayout.addComponent(termsAndConditionCheckFld);
+//		Link link = new Link();
+//		link.setCaption(
+//				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
+//		link.addStyleName(Style.REGISTER_LINK);
+//		horizontalLayout.addComponent(link);
 
 		final CButton registerFld = new CButton();
 		registerFld.setSizeFull();
@@ -386,7 +390,7 @@ public class LoginView extends VerticalLayout implements View {
 				emailFld.clear();
 				passwordFld.clear();
 				confirmPasswordFld.clear();
-				termsAndConditionCheckFld.clear();
+//				termsAndConditionCheckFld.clear();
 			}
 
 			private void registerUser() {
@@ -403,7 +407,7 @@ public class LoginView extends VerticalLayout implements View {
 				vo.setEmail(emailFld.getValue());
 				vo.setPassword(passwordFld.getValue());
 				vo.setPasswordConfirm(confirmPasswordFld.getValue());
-				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
+//				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
 				try {
 					SecurityValidation securityValidation = applicationUserService.registerUser(vo);
 					if (!securityValidation.isSuccess()) {

@@ -9,11 +9,16 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import software.simple.solutions.framework.core.entities.ApplicationUser;
+import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.event.ApplicationUserEvent;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.ConfigurationProperty;
+import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IPersonRelationService;
+import software.simple.solutions.framework.core.service.IUserRoleService;
 import software.simple.solutions.framework.core.valueobjects.PersonRelationVO;
+import software.simple.solutions.framework.core.valueobjects.UserRoleVO;
 import software.simple.solutions.referral.constants.ReferralRelationType;
 import software.simple.solutions.referral.service.IPersonFriendService;
 
@@ -27,6 +32,12 @@ public class ApplicationUserEventListener implements ApplicationListener<Applica
 
 	@Autowired
 	private IPersonFriendService personFriendService;
+
+	@Autowired
+	private IUserRoleService userRoleService;
+
+	@Autowired
+	private IConfigurationService configurationService;
 
 	@Override
 	public void onApplicationEvent(ApplicationUserEvent event) {
@@ -42,11 +53,24 @@ public class ApplicationUserEventListener implements ApplicationListener<Applica
 				personRelationVO.setRelationTypeId(ReferralRelationType.REFERRER);
 				personRelationVO.setStartDate(LocalDate.now());
 				personRelationService.updateSingle(personRelationVO);
-
 				personFriendService.deactivateAsFriend(person.getId());
+				setUserRole(applicationUser);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 			}
+		}
+	}
+
+	private void setUserRole(ApplicationUser applicationUser) throws FrameworkException {
+		Configuration configuration = configurationService
+				.getByCode(ConfigurationProperty.APPLICATION_DEFAULT_USER_ROLE);
+		if (configuration != null && configuration.getLong() != null) {
+			UserRoleVO vo = new UserRoleVO();
+			vo.setNew(true);
+			vo.setUserId(applicationUser.getId());
+			vo.setRoleId(configuration.getLong());
+			vo.setActive(true);
+			userRoleService.updateSingle(vo);
 		}
 	}
 

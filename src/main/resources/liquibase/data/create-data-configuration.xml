@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+<changeSet onValidationFail="MARK_RAN" id="data_configuration_10" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataConfiguration"><param name="id" value="10"></param><param name="code" value="configuration.system.application.default.user.role"></param><param name="name" value="Default user role"></param><param name="value"><![CDATA[1000]]></param></customChange></changeSet>
+<changeSet onValidationFail="MARK_RAN" id="data_configuration_11" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataConfiguration"><param name="id" value="11"></param><param name="code" value="configuration.system.application.home.view"></param><param name="name" value=""></param><param name="value"><![CDATA[10000]]></param></customChange></changeSet>
+<changeSet onValidationFail="MARK_RAN" id="data_configuration_12" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataConfiguration"><param name="id" value="12"></param><param name="code" value="configuration.system.application.layout"></param><param name="name" value=""></param><param name="value"><![CDATA[2]]></param></customChange></changeSet>
+<changeSet onValidationFail="MARK_RAN" id="data_configuration_6" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataConfiguration"><param name="id" value="6"></param><param name="code" value="configuration.system.application.name"></param><param name="name" value="Application name"></param><param name="value"><![CDATA[Shop@Stella]]></param></customChange></changeSet>
+</databaseChangeLog>
