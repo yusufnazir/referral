@@ -57,6 +57,10 @@ public class PersonFriend extends MappedSuperClass {
 			@FilterFieldProperty(fieldProperty = PersonFriendProperty.FRIEND_LAST_NAME, referencedFieldProperty = PersonProperty.LAST_NAME) })
 	private Person friend;
 
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.TOKEN)
+	@Column(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.TOKEN_)
+	private String token;
+
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.START_DATE)
 	@Column(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.START_DATE_)
 	private LocalDateTime startDate;
@@ -110,6 +114,14 @@ public class PersonFriend extends MappedSuperClass {
 	}
 
 	public void setActive(Boolean active) {
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 }

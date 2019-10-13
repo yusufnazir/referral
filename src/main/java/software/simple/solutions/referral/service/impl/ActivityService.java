@@ -2,6 +2,7 @@ package software.simple.solutions.referral.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ import software.simple.solutions.referral.service.IPersonRewardService;
 import software.simple.solutions.referral.valueobjects.ActivityVO;
 import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IActivityRepository.class)
 public class ActivityService extends SuperService implements IActivityService {
@@ -238,8 +239,9 @@ public class ActivityService extends SuperService implements IActivityService {
 		personFriendVO.setFriendId(person.getId());
 		personFriendVO.setStartDate(LocalDateTime.now());
 		personFriendVO.setNew(true);
-		personFriendService.updateSingle(personFriendVO);
-
+		personFriendVO.setToken(UUID.randomUUID().toString());
+		PersonFriend personFriend = personFriendService.updateSingle(personFriendVO);
+		personFriendService.sendInvitationToPerson(personFriend, vo.getCurrentUserId());
 		// applicationUserService.sendRegistrationMailToNewUser(applicationUser,
 		// vo);
 

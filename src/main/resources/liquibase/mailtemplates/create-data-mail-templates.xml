@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+	<changeSet onValidationFail="MARK_RAN" id="data_mail_template_10000_0" author="simple.solutions"><customChange class="software.simple.solutions.framework.core.liquibase.DataMailTemplate"><param name="id" value="10000"></param><param name="name" value="Invite a friend"></param><param name="description" value="Used for sending a mail when the user invites a friend"></param><param name="subject"><![CDATA[Shopping invite from ${application_name} by ${model_person_friend_person}]]></param><param name="message"><![CDATA[<p>Dear ${recipient_first_name} ${recipient_last_name},</p><p><br></p><p>You have been invited to fulfill your shopping need at ${application_name} by ${model_person_friend_person}.<br>Use the following token to complete your shopping:</p><p><b>${model_person_friend_token}</b></p><p>Sincerely,</p><p>${application_name}</p>]]></param></customChange></changeSet>
+
+</databaseChangeLog>

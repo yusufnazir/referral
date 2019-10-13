@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1563751139055">
+		author="simplesolutions" id="1570977850733">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_friends_" />
@@ -17,11 +17,12 @@
 			<column name="FRIEND_ID_" type="BIGINT" />
 			<column name="START_DATE_" type="TIMESTAMP(6)" />
 			<column name="END_DATE_" type="TIMESTAMP(6)" />
+			<column name="TOKEN_" type="VARCHAR(1000)" />
 		</createTable>
 	</changeSet>
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1563751168028">
+		author="simplesolutions" id="1570977857759">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_friends_aud" />
@@ -39,7 +40,33 @@
 			<column name="FRIEND_ID_" type="BIGINT" />
 			<column name="START_DATE_" type="TIMESTAMP(6)" />
 			<column name="END_DATE_" type="TIMESTAMP(6)" />
+			<column name="TOKEN_" type="VARCHAR(1000)" />
 		</createTable>
+	</changeSet>
+
+	<changeSet id="1570996848426" author="simplesolutions"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_friends_" columnName="TOKEN_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_friends_">
+			<column name="TOKEN_" type="VARCHAR(1000)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="1570996929099" author="simplesolutions"
+		onValidationFail="MARK_RAN" failOnError="true">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="person_friends_aud"
+					columnName="TOKEN_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="person_friends_aud">
+			<column name="TOKEN_" type="VARCHAR(1000)" />
+		</addColumn>
 	</changeSet>
 
 </databaseChangeLog>

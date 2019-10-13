@@ -1,9 +1,12 @@
 package software.simple.solutions.referral.web.views;
 
+import java.util.UUID;
+
 import com.vaadin.data.ValueProvider;
 
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CPopupDateField;
+import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CDateIntervalLayout;
@@ -158,6 +161,7 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 		private PersonLookUpField friendFld;
 		private CPopupDateField startDateFld;
 		private CPopupDateField endDateFld;
+		private CTextField tokenFld;
 
 		private PersonFriend personFriend;
 
@@ -168,9 +172,13 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 
 			personFld = formGrid.addField(PersonLookUpField.class, PersonFriendProperty.PERSON, 0, 0);
 			personFld.setRequiredIndicatorVisible(true);
+			personFld.handleForParentEntity(getReferenceKey(ReferenceKey.PERSON));
 
 			friendFld = formGrid.addField(PersonLookUpField.class, PersonFriendProperty.FRIEND, 0, 1);
 			friendFld.setRequiredIndicatorVisible(true);
+
+			tokenFld = formGrid.addField(CTextField.class, PersonFriendProperty.TOKEN, 0, 2);
+			tokenFld.setRequiredIndicatorVisible(true);
 
 			startDateFld = formGrid.addField(CPopupDateField.class, PersonFriendProperty.START_DATE, 1, 0);
 			startDateFld.setRequiredIndicatorVisible(true);
@@ -180,6 +188,8 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 
 		@Override
 		public void handleNewForm() throws FrameworkException {
+			tokenFld.setReadOnly(true);
+			tokenFld.setValue(UUID.randomUUID().toString());
 		}
 
 		@SuppressWarnings("unchecked")
@@ -191,6 +201,7 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 			startDateFld
 					.setValue(personFriend.getStartDate() == null ? null : personFriend.getStartDate().toLocalDate());
 			endDateFld.setValue(personFriend.getEndDate() == null ? null : personFriend.getEndDate().toLocalDate());
+			tokenFld.setValue(personFriend.getToken());
 			return personFriend;
 		}
 
@@ -203,6 +214,7 @@ public class PersonFriendView extends BasicTemplate<PersonFriend> {
 			vo.setFriendId(friendFld.getItemId());
 			vo.setStartDate(startDateFld.getValue() == null ? null : startDateFld.getValue().atStartOfDay());
 			vo.setEndDate(endDateFld.getValue() == null ? null : endDateFld.getValue().atStartOfDay());
+			vo.setToken(tokenFld.getValue());
 			return vo;
 		}
 	}

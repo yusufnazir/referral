@@ -9,6 +9,7 @@ public class PersonFriendProperty {
 	public static final String START_DATE = "model.person.friend.start.date";
 	public static final String END_DATE = "model.person.friend.end.date";
 	public static final String ACTIVE = "model.person.friend.active";
+	public static final String TOKEN = "model.person.friend.token";
 	
 	public static final String PERSON_FIRST_NAME = "model.person.friend.person.first.name";
 	public static final String PERSON_LAST_NAME = "model.person.friend.person.last.name";

@@ -48,4 +48,9 @@ public class PersonFriendServiceFacade extends SuperServiceFacade<IPersonFriendS
 		return service.deactivateAsFriend(id);
 	}
 
+	@Override
+	public void sendInvitationToPerson(PersonFriend personFriend, Long userId) throws FrameworkException {
+		service.sendInvitationToPerson(personFriend, userId);
+	}
+
 }

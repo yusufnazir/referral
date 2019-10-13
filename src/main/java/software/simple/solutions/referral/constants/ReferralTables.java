@@ -55,6 +55,7 @@ public class ReferralTables extends CxodeTables {
 			public static final String START_DATE_ = "START_DATE_";
 			public static final String END_DATE_ = "END_DATE_";
 			public static final String ACTIVE_ = "ACTIVE_";
+			public static final String TOKEN_ = "TOKEN_";
 		}
 	}
 

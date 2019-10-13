@@ -20,6 +20,7 @@ public class PersonFriendVO extends SuperVO {
 	private Long friendId;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
+	private String token;
 
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.PERSON_FIRST_NAME)
 	private StringInterval personFirstName;
@@ -33,6 +34,8 @@ public class PersonFriendVO extends SuperVO {
 	private DateInterval startDateInterval;
 	@FilterFieldProperty(fieldProperty = PersonFriendProperty.END_DATE)
 	private DateInterval endDateInterval;
+	@FilterFieldProperty(fieldProperty = PersonFriendProperty.TOKEN)
+	private StringInterval tokenInterval;
 
 	private PersonVO personVO;
 
@@ -146,6 +149,22 @@ public class PersonFriendVO extends SuperVO {
 
 	public void setEndDateInterval(DateInterval endDateInterval) {
 		this.endDateInterval = endDateInterval;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public StringInterval getTokenInterval() {
+		return tokenInterval;
+	}
+
+	public void setTokenInterval(StringInterval tokenInterval) {
+		this.tokenInterval = tokenInterval;
 	}
 
 }
