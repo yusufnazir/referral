@@ -33,4 +33,13 @@ public class PersonRewardServiceFacade extends SuperServiceFacade<IPersonRewardS
 		return service.updatePersonReward(referrerId, activityRewardAmount, usedRewardAmount);
 	}
 
+	@Override
+	public PersonReward getByPerson(Long personId) throws FrameworkException {
+		return service.getByPerson(personId);
+	}
+
+	public void createToken(Long personId) throws FrameworkException {
+		service.createToken(personId);
+	}
+
 }

@@ -21,6 +21,7 @@ import software.simple.solutions.framework.core.valueobjects.PersonRelationVO;
 import software.simple.solutions.framework.core.valueobjects.UserRoleVO;
 import software.simple.solutions.referral.constants.ReferralRelationType;
 import software.simple.solutions.referral.service.IPersonFriendService;
+import software.simple.solutions.referral.service.IPersonRewardService;
 
 @Component
 public class ApplicationUserEventListener implements ApplicationListener<ApplicationUserEvent> {
@@ -38,6 +39,9 @@ public class ApplicationUserEventListener implements ApplicationListener<Applica
 
 	@Autowired
 	private IConfigurationService configurationService;
+	
+	@Autowired
+	private IPersonRewardService personRewardService;
 
 	@Override
 	public void onApplicationEvent(ApplicationUserEvent event) {
@@ -55,6 +59,8 @@ public class ApplicationUserEventListener implements ApplicationListener<Applica
 				personRelationService.updateSingle(personRelationVO);
 				personFriendService.deactivateAsFriend(person.getId());
 				setUserRole(applicationUser);
+				
+				personRewardService.createToken(person.getId());
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 			}

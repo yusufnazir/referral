@@ -44,6 +44,9 @@ public class PersonReward extends MappedSuperClass {
 	@Column(name = ReferralTables.PERSON_REWARDS_.COLUMNS.CUMULATIVE_REWARD_)
 	private BigDecimal cumulativeReward;
 
+	@Column(name = ReferralTables.PERSON_FRIENDS_.COLUMNS.TOKEN_)
+	private String token;
+
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +69,14 @@ public class PersonReward extends MappedSuperClass {
 
 	public void setCumulativeReward(BigDecimal cumulativeReward) {
 		this.cumulativeReward = cumulativeReward;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	@Override

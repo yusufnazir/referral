@@ -1,7 +1,9 @@
 package software.simple.solutions.referral.service.impl;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,7 +23,7 @@ import software.simple.solutions.referral.repository.IPersonRewardRepository;
 import software.simple.solutions.referral.service.IPersonRewardService;
 import software.simple.solutions.referral.valueobjects.PersonRewardVO;
 
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = IPersonRewardRepository.class)
 public class PersonRewardService extends SuperService implements IPersonRewardService {
@@ -67,9 +69,9 @@ public class PersonRewardService extends SuperService implements IPersonRewardSe
 			personReward.setPerson(get(Person.class, referrerId));
 			personReward.setCumulativeReward(activityRewardAmount);
 		} else {
-			personReward.setCumulativeReward(cumulativeAmount
-					.subtract(usedRewardAmount == null ? BigDecimal.ZERO : usedRewardAmount)
-					.add(activityRewardAmount == null ? BigDecimal.ZERO : activityRewardAmount));
+			personReward.setCumulativeReward(
+					cumulativeAmount.subtract(usedRewardAmount == null ? BigDecimal.ZERO : usedRewardAmount)
+							.add(activityRewardAmount == null ? BigDecimal.ZERO : activityRewardAmount));
 		}
 		return saveOrUpdate(personReward, isNew);
 	}
@@ -85,6 +87,26 @@ public class PersonRewardService extends SuperService implements IPersonRewardSe
 		}
 
 		return personReward.getCumulativeReward();
+	}
+
+	@Override
+	public PersonReward getByPerson(Long personId) throws FrameworkException {
+		return personRewardRepository.getByPerson(personId);
+	}
+
+	@Override
+	public void createToken(Long personId) throws FrameworkException {
+		PersonReward personReward = getByPerson(personId);
+		if (personReward == null) {
+			personReward = new PersonReward();
+			personReward.setPerson(get(Person.class, personId));
+			personReward.setCumulativeReward(BigDecimal.ZERO);
+			personReward.setToken(UUID.randomUUID().toString());
+			saveOrUpdate(personReward, true);
+		} else if (StringUtils.isBlank(personReward.getToken())) {
+			personReward.setToken(UUID.randomUUID().toString());
+			saveOrUpdate(personReward, false);
+		}
 	}
 
 }

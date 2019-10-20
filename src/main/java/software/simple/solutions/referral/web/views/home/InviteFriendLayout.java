@@ -18,11 +18,13 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.framework.core.components.CButton;
+import software.simple.solutions.framework.core.components.CLabel;
 import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.components.select.GenderSelect;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.entities.Person;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.SecurityValidation;
 import software.simple.solutions.framework.core.properties.RegistrationProperty;
@@ -30,8 +32,11 @@ import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.PersonVO;
+import software.simple.solutions.referral.entities.PersonReward;
 import software.simple.solutions.referral.properties.HomeProperty;
+import software.simple.solutions.referral.properties.ReferrerProperty;
 import software.simple.solutions.referral.service.IActivityService;
+import software.simple.solutions.referral.service.IPersonRewardService;
 import software.simple.solutions.referral.valueobjects.PersonFriendVO;
 
 public class InviteFriendLayout {
@@ -52,6 +57,7 @@ public class InviteFriendLayout {
 	private CButton inviteFriendsFld;
 	private CButton clearFieldsFld;
 	private SessionHolder sessionHolder;
+	private CLabel tokenFld;
 
 	private final BehaviorSubject<Boolean> friendInvitedObserver;
 
@@ -88,6 +94,23 @@ public class InviteFriendLayout {
 		layout.setSpacing(true);
 		layout.setWidth("600px");
 		fields.addComponent(layout);
+
+		tokenFld = new CLabel();
+		tokenFld.setSizeFull();
+		tokenFld.addStyleName(ValoTheme.LABEL_LARGE);
+		tokenFld.setCaption(PropertyResolver.getPropertyValueByLocale(ReferrerProperty.TOKEN));
+		IPersonRewardService personRewardService = ContextProvider.getBean(IPersonRewardService.class);
+		Person person = sessionHolder.getApplicationUser().getPerson();
+		if (person != null) {
+			try {
+				PersonReward personReward = personRewardService.getByPerson(person.getId());
+				if (personReward != null) {
+					tokenFld.setValue(personReward.getToken());
+				}
+			} catch (FrameworkException e) {
+				logger.error(e.getMessage(), e);
+			}
+		}
 
 		firstNameFld = new CTextField();
 		firstNameFld.setSizeFull();
@@ -161,7 +184,7 @@ public class InviteFriendLayout {
 		clearFieldsFld.setIcon(VaadinIcons.ERASER);
 		actionLayout.addComponent(clearFieldsFld);
 
-		layout.addComponents(firstNameFld, lastNameFld, dobFld, contactNumberFld, emailFld, actionLayout);
+		layout.addComponents(tokenFld, firstNameFld, lastNameFld, dobFld, contactNumberFld, emailFld, actionLayout);
 
 		inviteFriendsFld.addClickListener(new ClickListener() {
 

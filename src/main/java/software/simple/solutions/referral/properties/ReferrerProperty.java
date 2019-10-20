@@ -17,4 +17,5 @@ public class ReferrerProperty {
 	public static final String ENABLE_AS_REFERRER_CONFIRMATION = "model.referrer.enable.as.referrer.confirmation";
 	public static final String STOP_BEING_REFERRER = "model.referrer.stop.being.referrer";
 	public static final String START_BEING_REFERRER = "model.referrer.start.being.referrer";
+	public static final String TOKEN = "model.referrer.token";
 }

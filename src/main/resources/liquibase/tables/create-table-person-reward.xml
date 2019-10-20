@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1563747845163">
+		author="simplesolutions" id="1571533286949">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_rewards_" />
@@ -15,10 +15,11 @@
 			</column>
 			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="CUMULATIVE_REWARD_" type="NUMBER" />
+			<column name="TOKEN_" type="VARCHAR(1000)" />
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
-		author="simplesolutions" id="1563747852440">
+		author="simplesolutions" id="1571533293984">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<tableExists tableName="person_rewards_aud" />
@@ -34,6 +35,7 @@
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="PERSON_ID_" type="BIGINT" />
 			<column name="CUMULATIVE_REWARD_" type="NUMBER" />
+			<column name="TOKEN_" type="VARCHAR(1000)" />
 		</createTable>
 	</changeSet>
 

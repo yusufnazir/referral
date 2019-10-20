@@ -8,8 +8,13 @@ import software.simple.solutions.referral.entities.PersonReward;
 
 public interface IPersonRewardService extends ISuperService {
 
-	PersonReward updatePersonReward(Long referrerId, BigDecimal activityRewardAmount, BigDecimal usedRewardAmount) throws FrameworkException;
+	PersonReward updatePersonReward(Long referrerId, BigDecimal activityRewardAmount, BigDecimal usedRewardAmount)
+			throws FrameworkException;
 
 	BigDecimal getPersonCumulativeReward(Long personId) throws FrameworkException;
+
+	PersonReward getByPerson(Long personId) throws FrameworkException;
+
+	void createToken(Long personId) throws FrameworkException;
 
 }

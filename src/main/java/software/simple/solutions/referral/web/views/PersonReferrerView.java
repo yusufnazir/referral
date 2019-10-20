@@ -29,6 +29,7 @@ import software.simple.solutions.framework.core.valueobjects.PersonRelationVO;
 import software.simple.solutions.referral.constants.ReferralReferenceKey;
 import software.simple.solutions.referral.constants.ReferralRelationType;
 import software.simple.solutions.referral.entities.PersonFriend;
+import software.simple.solutions.referral.entities.PersonReward;
 import software.simple.solutions.referral.properties.ReferrerProperty;
 import software.simple.solutions.referral.service.facade.PersonFriendServiceFacade;
 import software.simple.solutions.referral.service.facade.PersonRewardServiceFacade;
@@ -45,6 +46,7 @@ public class PersonReferrerView extends AbstractBaseView {
 	private CButton toggleReferrerFld;
 	private Label totalRewardAmount;
 	private Label currentReferrerFld;
+	private Label tokenFld;
 
 	@Override
 	public void executeBuild() throws FrameworkException {
@@ -70,6 +72,8 @@ public class PersonReferrerView extends AbstractBaseView {
 		toggleReferrerFld.addStyleName(ValoTheme.BUTTON_LINK);
 
 		totalRewardAmount = gridLayout.addField(CLabel.class, ReferrerProperty.TOTAL_REWARD_AMOUNT, 0, 2);
+
+		tokenFld = gridLayout.addField(Label.class, ReferrerProperty.TOKEN, 0, 3);
 
 		try {
 			setValues();
@@ -115,8 +119,16 @@ public class PersonReferrerView extends AbstractBaseView {
 			totalRewardAmount.setVisible(true);
 
 			PersonRewardServiceFacade personRewardServiceFacade = PersonRewardServiceFacade.get(UI.getCurrent());
-			BigDecimal cumulativeReward = personRewardServiceFacade.getPersonCumulativeReward(person.getId());
+			PersonReward personReward = personRewardServiceFacade.getByPerson(person.getId());
+			// BigDecimal cumulativeReward =
+			// personRewardServiceFacade.getPersonCumulativeReward(person.getId());
+			BigDecimal cumulativeReward = (personReward == null || personReward.getCumulativeReward() == null)
+					? BigDecimal.ZERO : personReward.getCumulativeReward();
 			totalRewardAmount.setValue(Constants.DF.format(cumulativeReward));
+
+			if (personReward != null) {
+				tokenFld.setValue(personReward.getToken());
+			}
 		}
 
 		toggleReferrerFld.addClickListener(new ClickListener() {
@@ -145,11 +157,14 @@ public class PersonReferrerView extends AbstractBaseView {
 					personRelationVO.setRelationTypeId(ReferralRelationType.REFERRER);
 					personRelationVO.setStartDate(LocalDate.now());
 					personRelation = personRelationServiceFacade.updateSingle(personRelationVO);
+					
 
 					PersonRewardServiceFacade personRewardServiceFacade = PersonRewardServiceFacade
 							.get(UI.getCurrent());
 					BigDecimal cumulativeReward = personRewardServiceFacade.getPersonCumulativeReward(person.getId());
 					totalRewardAmount.setValue(Constants.DF.format(cumulativeReward));
+					
+					personRewardServiceFacade.createToken(person.getId());
 				} else {
 					PersonRelationVO personRelationVO = new PersonRelationVO();
 					personRelationVO.setId(personRelation.getId());

@@ -2,7 +2,6 @@ package software.simple.solutions.referral.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import software.simple.solutions.referral.constants.ReferralRelationType;
 import software.simple.solutions.referral.entities.Activity;
 import software.simple.solutions.referral.entities.ActivityType;
 import software.simple.solutions.referral.entities.PersonFriend;
+import software.simple.solutions.referral.entities.PersonReward;
 import software.simple.solutions.referral.properties.ActivityProperty;
 import software.simple.solutions.referral.repository.IActivityRepository;
 import software.simple.solutions.referral.service.IActivityService;
@@ -234,12 +234,14 @@ public class ActivityService extends SuperService implements IActivityService {
 		personService.updatePersonEmail(person.getId(), personVO.getEmail());
 		personService.updatePersonMobileNumber(person.getId(), personVO.getMobileNumber());
 
+		PersonReward personReward = personRewardService.getByPerson(vo.getPersonId());
+
 		PersonFriendVO personFriendVO = new PersonFriendVO();
 		personFriendVO.setPersonId(vo.getPersonId());
 		personFriendVO.setFriendId(person.getId());
 		personFriendVO.setStartDate(LocalDateTime.now());
 		personFriendVO.setNew(true);
-		personFriendVO.setToken(UUID.randomUUID().toString());
+		personFriendVO.setToken(personReward.getToken());
 		PersonFriend personFriend = personFriendService.updateSingle(personFriendVO);
 		personFriendService.sendInvitationToPerson(personFriend, vo.getCurrentUserId());
 		// applicationUserService.sendRegistrationMailToNewUser(applicationUser,

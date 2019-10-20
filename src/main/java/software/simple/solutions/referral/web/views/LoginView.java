@@ -20,13 +20,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.framework.core.components.CButton;
-import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CLabel;
 import software.simple.solutions.framework.core.components.CPasswordField;
@@ -46,6 +44,7 @@ import software.simple.solutions.framework.core.properties.ConfigurationProperty
 import software.simple.solutions.framework.core.properties.RegistrationProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.service.IApplicationUserService;
+import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -131,20 +130,32 @@ public class LoginView extends VerticalLayout implements View {
 		messageLbl.setWidth("80%");
 		messageLbl.setContentMode(ContentMode.HTML);
 		messageLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		String propertyValueByLocale = PropertyResolver.getPropertyValueByLocale(LoginProperty.REFERRAL_INDEX_PAGE_MAIN_MESSAGE,
-				UI.getCurrent().getLocale());
+		String propertyValueByLocale = PropertyResolver
+				.getPropertyValueByLocale(LoginProperty.REFERRAL_INDEX_PAGE_MAIN_MESSAGE, UI.getCurrent().getLocale());
 		messageLbl.setValue(propertyValueByLocale);
-//		messageLbl
-//				.setValue("&nbsp;<h1 style=\"color:#a04d7d;\"><b>Get rewarded and make your friends love you!</b></h1>"
-//						+ "<h2 style=\"color:#a04d7d;\"><p>Let your friends use your refferal discount code "
-//						+ "@ each purchase order and they wil receive the same discount as you. "
-//						+ "For every purchase they make with a value of $100 or more, you get a $5 reward.</p><br></h2>"
-//						+ "<h2 style=\"color:#a04d7d;\"><b>Conditions:</b><br>&nbsp;" + "<ul>"
-//						+ "<li style=\"padding-bottom:0.5em\">You must be a registered referal member. Cost to register TBD (1st 10-15 kandidates free admission).</li>"
-//						+ "<li style=\"padding-bottom:0.5em\">Your friend must match your full name and discount code @ each purchase order.</li>"
-//						+ "<li style=\"padding-bottom:0.5em\">If unspend your accumulated reward will max out @ US$ 100.</li>"
-//						+ "<li style=\"padding-bottom:0.5em\">Use your reward to discount the Costs for your next order (Price USA or EU = Price SU) on items with a shipping weight equal or less than 2 lbs and up to a purchase order of max. US$ 100.</li>"
-//						+ "</ul></h2>");
+		// messageLbl
+		// .setValue("&nbsp;<h1 style=\"color:#a04d7d;\"><b>Get rewarded and
+		// make your friends love you!</b></h1>"
+		// + "<h2 style=\"color:#a04d7d;\"><p>Let your friends use your refferal
+		// discount code "
+		// + "@ each purchase order and they wil receive the same discount as
+		// you. "
+		// + "For every purchase they make with a value of $100 or more, you get
+		// a $5 reward.</p><br></h2>"
+		// + "<h2 style=\"color:#a04d7d;\"><b>Conditions:</b><br>&nbsp;" +
+		// "<ul>"
+		// + "<li style=\"padding-bottom:0.5em\">You must be a registered
+		// referal member. Cost to register TBD (1st 10-15 kandidates free
+		// admission).</li>"
+		// + "<li style=\"padding-bottom:0.5em\">Your friend must match your
+		// full name and discount code @ each purchase order.</li>"
+		// + "<li style=\"padding-bottom:0.5em\">If unspend your accumulated
+		// reward will max out @ US$ 100.</li>"
+		// + "<li style=\"padding-bottom:0.5em\">Use your reward to discount the
+		// Costs for your next order (Price USA or EU = Price SU) on items with
+		// a shipping weight equal or less than 2 lbs and up to a purchase order
+		// of max. US$ 100.</li>"
+		// + "</ul></h2>");
 		bannerLayout.addComponent(messageLbl);
 		bannerLayout.setComponentAlignment(messageLbl, Alignment.TOP_CENTER);
 
@@ -354,13 +365,13 @@ public class LoginView extends VerticalLayout implements View {
 		confirmPasswordFld.setRequiredIndicatorVisible(true);
 
 		HorizontalLayout horizontalLayout = new HorizontalLayout();
-//		CCheckBox termsAndConditionCheckFld = new CCheckBox();
-//		horizontalLayout.addComponent(termsAndConditionCheckFld);
-//		Link link = new Link();
-//		link.setCaption(
-//				PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
-//		link.addStyleName(Style.REGISTER_LINK);
-//		horizontalLayout.addComponent(link);
+		// CCheckBox termsAndConditionCheckFld = new CCheckBox();
+		// horizontalLayout.addComponent(termsAndConditionCheckFld);
+		// Link link = new Link();
+		// link.setCaption(
+		// PropertyResolver.getPropertyValueByLocale(RegistrationProperty.REGISTER_AGREE_TERMS_AND_CONDITIONS));
+		// link.addStyleName(Style.REGISTER_LINK);
+		// horizontalLayout.addComponent(link);
 
 		final CButton registerFld = new CButton();
 		registerFld.setSizeFull();
@@ -390,7 +401,7 @@ public class LoginView extends VerticalLayout implements View {
 				emailFld.clear();
 				passwordFld.clear();
 				confirmPasswordFld.clear();
-//				termsAndConditionCheckFld.clear();
+				// termsAndConditionCheckFld.clear();
 			}
 
 			private void registerUser() {
@@ -407,7 +418,7 @@ public class LoginView extends VerticalLayout implements View {
 				vo.setEmail(emailFld.getValue());
 				vo.setPassword(passwordFld.getValue());
 				vo.setPasswordConfirm(confirmPasswordFld.getValue());
-//				vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
+				// vo.setTermsAccepted(termsAndConditionCheckFld.getValue());
 				try {
 					SecurityValidation securityValidation = applicationUserService.registerUser(vo);
 					if (!securityValidation.isSuccess()) {
@@ -474,12 +485,18 @@ public class LoginView extends VerticalLayout implements View {
 		return fields;
 	}
 
-	protected String postProcessLdapUsername(String username) {
+	protected String postProcessLdapUsername(String username) throws FrameworkException {
 		String applicationUserName = username;
-		if (username.contains("@")) {
-			applicationUserName = username.substring(0, username.indexOf('@'));
-		} else if (username.contains("\\")) {
-			applicationUserName = username.substring(username.indexOf('\\') + 1, username.length());
+		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
+		Configuration configuration = configurationService.getByCode(ConfigurationProperty.LDAP_CONFIGURATION_USE_LDAP);
+		if (configuration != null && configuration.getBoolean()) {
+			// via ldap
+
+			if (username.contains("@")) {
+				applicationUserName = username.substring(0, username.indexOf('@'));
+			} else if (username.contains("\\")) {
+				applicationUserName = username.substring(username.indexOf('\\') + 1, username.length());
+			}
 		}
 		return applicationUserName;
 	}
